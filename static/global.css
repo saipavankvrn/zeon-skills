@@ -1,0 +1,282 @@
+/* Font Family */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+body {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  color: #2f327d;
+  font-size: 42px;
+  font-weight: 600;
+}
+
+h2 {
+  color: #2f327d;
+  font-size: 36px;
+  font-weight: bold;
+}
+
+h4 {
+  color: #f48c07;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 20px;
+  color: #264157;
+  font-weight: 600;
+}
+
+p {
+  color: #4b4b5a;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.btn-quiz {
+  background-color: #f48c07;
+  color: white;
+  font-size: 18px;
+  border-radius: 40px;
+  padding: 10px 16px;
+  width: fit-content;
+}
+
+.btn-quiz:hover {
+  background-color: #d97706;
+}
+
+/* Header CSS */
+
+.custom-nav-link {
+  color: #2f327d !important;
+}
+
+.navbar-collapse .show {
+  background-color: white;
+}
+
+/* banner CSS */
+
+.bg-custom {
+  background-color: #d4e6ff;
+}
+
+.wave-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  line-height: 0;
+  transform: translateY(1px);
+}
+
+.wave-bottom svg {
+  display: block;
+  width: 100%;
+  height: 100px;
+}
+
+.custom-nav-item {
+  color: #2f327d !important;
+}
+
+.navbar-collapse .show {
+  background-color: white;
+}
+
+.navbar .nav-link.active {
+  color: #2f327d;
+}
+
+.txt {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.btnn {
+  background-color: black;
+  color: white;
+  width: 150px;
+  text-align: center;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.card-img1 {
+  width: 70px;
+  height: 70px;
+  background-color: white;
+  border-radius: 50%;
+  position: relative;
+}
+
+.card-img1 img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: auto;
+}
+
+.card-img2 {
+  width: 70px;
+  height: 70px;
+  background-color: #fff2e6;
+  border-radius: 50%;
+  position: relative;
+}
+
+.card-img2 img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: auto;
+}
+
+h6 {
+  color: white;
+}
+
+.icons {
+  background-color: #e8c5b0;
+  color: black !important;
+}
+
+.btn-login {
+  background-color: #f48c07;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  margin: 0 auto;
+  display: block;
+}
+
+.btn-login:hover {
+  background-color: #d97906;
+}
+
+.hover-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Circle Styles */
+.page2-cards .circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page2-cards .circle img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
+
+.page2-cards .circle-blue {
+  background-color: #007bff;
+  /* Bootstrap blue */
+}
+
+.page2-cards .circle-yellow {
+  background-color: #ffc107;
+  /* Bootstrap yellow */
+}
+
+.page2-cards .circle-green {
+  background-color: #006400;
+  /* Dark green */
+}
+
+/* Card Styles */
+.page2-cards .custom-card {
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.page2-cards .custom-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.nav-pills .nav-link {
+  background-color: #6c757d;
+  /* Grey idle */
+  color: #fff;
+  margin-right: 5px;
+}
+
+.nav-pills .nav-link.active {
+  background-color: #0d6efd !important;
+  /* Blue active */
+  color: #fff !important;
+}
+
+/* ✅ Sticky Footer Fix */
+html, body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1; /* pushes footer down */
+}
+
+footer {
+  margin-top: auto;
+}
+.offcanvas .profile-img {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.offcanvas-profile .dropdown-menu {
+  min-width: 160px;
+}

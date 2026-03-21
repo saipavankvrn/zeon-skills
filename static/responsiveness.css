@@ -1,0 +1,72 @@
+/* Full-height row */
+.login_page .row {
+    height: 500px;
+    max-width: 1000px;
+}
+
+.login_page img.object-fit-cover {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+@media(min-width:993px){
+  .login_page img{
+    height: 80px;
+  }
+}
+
+@media (max-width: 992px) {
+    .login_page .row {
+        flex-direction: column;
+        height: auto;
+    }
+    .login_page img {
+        height: 90px;
+        width: 90px;
+    }
+    .login_page input,
+    .login_page button {
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .login_page h2 { font-size: 1.5rem; }
+    .login_page p { font-size: 0.9rem; }
+}
+    
+    
+    /* Hide sidebar on mobile */
+    @media (max-width: 991.98px) {
+      .sidebar {
+        display: none;
+      }
+      .main {
+        margin-left: 0 !important;
+      }
+      .search-form input {
+       
+        width: 100%;
+    }
+  
+    }
+
+/* save button responsive in mobile */
+@media (max-width: 768px) {
+  .save-btn{
+    margin-top: 5px;
+    margin-left: 0;
+    margin-right: auto;
+  }
+}
+
+/* edit and delete buttons responsive in mobile*/
+@media (max-width: 768px){
+  .table-buttons {
+    display: flex;
+    flex-direction: row !important;
+    justify-content: center;
+    gap: 10px;
+  }
+}

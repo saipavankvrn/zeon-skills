@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Veda-X Dashboard{% endblock %}</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="static/images/Veda-X.ico" />
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='responsiveness.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+{% block sidebar %}
+{% if sidebar %}
+  <aside class="sidebar d-none d-lg-block">
+    <div class="logo px-3">
+      <a href="{{ url_for('admin_dashboard') }}">
+        <img src="{{ url_for('static', filename='images/Veda-X.png') }}" alt="Zeon Logo" class="sidebar-logo">
+      </a>
+    </div>
+    <nav class="nav flex-column">
+      <a class="nav-link active" href="{{ url_for('admin_dashboard') }}"><i class="fa-solid fa-table-cells-large me-2"></i> Dashboard</a>
+      <a class="nav-link" href="{{ url_for('admin_categories') }}"><i class="fa-solid fa-list me-2"></i> Categories</a>
+
+      <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#skillsMenu"
+        role="button" aria-expanded="false" aria-controls="skillsMenu">
+        <span><i class="fa-solid fa-clipboard-list me-2"></i> Skills</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </a>
+      <div class="collapse ps-4" id="skillsMenu">
+        <ul class="list-unstyled">
+          <li><a href="{{ url_for('admin_createskill') }}" class="text-decoration-none text-black">Create Skill</a></li>
+          <li><a href="{{ url_for('admin_allskill') }}" class="text-decoration-none text-black">All Skills</a></li>
+
+          <li><a href="{{ url_for('admin_skillresults') }}" class="text-decoration-none text-black">Skill Results</a></li>
+        </ul>
+      </div>
+    </nav>
+  </aside>
+
+  <div class="offcanvas offcanvas-start bg-white" tabindex="-1" id="mobileSidebar">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title">Veda-X</h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+      <nav class="nav flex-column">
+        <a class="nav-link active text-black" href="{{ url_for('admin_dashboard') }}"><i class="fa-solid fa-table-cells-large me-2"></i> Dashboard</a>
+        <a class="nav-link text-black" href="{{ url_for('admin_categories') }}"><i class="fa-solid fa-list me-2"></i> Categories</a>
+
+        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+          href="#skillsMenuMobile" role="button" aria-expanded="false" aria-controls="skillsMenuMobile">
+          <span class="text-black"><i class="fa-solid fa-clipboard-list me-2"></i> Skills</span>
+          <i class="fa-solid fa-chevron-down text-black"></i>
+        </a>
+        <div class="collapse ps-4" id="skillsMenuMobile">
+          <ul class="list-unstyled">
+            <li><a href="{{ url_for('admin_createskill') }}" class="text-decoration-none text-black">Create Skill</a></li>
+            <li><a href="{{ url_for('admin_allskill') }}" class="text-decoration-none text-black">All Skills</a></li>
+
+            <li><a href="{{ url_for('admin_skillresults') }}" class="text-decoration-none text-black">Skill Results</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}
+
+{% block header %}
+{% if header %}
+  <main class="main">
+    <header class="top-bar d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+      <div class="d-flex align-items-center flex-grow-1 gap-3">
+        <button class="btn btn-outline-dark d-lg-none" type="button" data-bs-toggle="offcanvas"
+          data-bs-target="#mobileSidebar">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="flex-grow-1 search-form">
+          <input type="text" class="form-control" placeholder="Search...">
+        </div>
+      </div>
+
+      <div class="profile dropdown">
+        <img src="{{ url_for('static', filename='images/user (1).png') }}" alt="profile" class="rounded-circle" width="40">
+        <span class="status-dot bg-success"></span>
+        <i class="fa-solid fa-chevron-down m-2" data-bs-toggle="dropdown"></i>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+      </div>
+    </header>
+{% endif %}
+{% endblock %}
+
+{% block main %}
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="card-stats stats-purple">
+        <div class="icon-circle"><i class="fa-solid fa-graduation-cap"></i></div>
+        <div><h5><b>{{ total_categories }}</b></h5><p class="m-0">Total Categories</p></div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card-stats stats-green">
+        <div class="icon-circle"><i class="fa-solid fa-chalkboard"></i></div>
+        <div><h5><b>{{ total_skills }}</b></h5><p class="m-0">Total Skills</p></div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card-stats stats-purple">
+        <div class="icon-circle"><i class="fa-solid fa-graduation-cap"></i></div>
+        <div><h5><b>{{ attempted_skills }}</b></h5><p class="m-0">Attempted Skills</p></div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card-stats stats-orange">
+        <div class="icon-circle"><i class="fa-solid fa-users"></i></div>
+        <div><h5><b>{{ total_users }}</b></h5><p class="m-0">Total Users</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="skills-card mb-4">
+    <div class="section-header d-flex justify-content-between align-items-center">
+      <h4><b>Recent Skills</b></h4>
+      <a href="{{ url_for('admin_allskill') }}" class="see-all">See All</a>
+    </div>
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Skill Title</th>
+            <th>Category</th>
+            <th>No. of Questions</th>
+            <th>Total Marks</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for skill in recent_skills_data %}
+          <tr>
+            <td>{{ skill.name }}</td>
+            <td>{{ skill.category }}</td>
+            <td>N/A</td> <td>N/A</td> <td><a href="{{ url_for('admin_editskill', skill_id=skill.id) }}">Edit Skill</a></td>
+          </tr>
+          {% endfor %}
+          {% if not recent_skills_data %}
+          <tr>
+              <td colspan="5" class="text-center">No recent skills opened yet.</td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block footer %}
+    <footer id="openSkills" class="text-center py-3">
+      &copy; {{ current_year or "2025" }} Veda-X, All Rights Reserved
+    </footer>
+  </main>
+{% endblock %}
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='js/admin_script.js') }}"></script>
+</body>
+</html>

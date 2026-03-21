@@ -1,0 +1,222 @@
+{% extends 'home.html' %}
+{% block title %} Test Result | Veda-X{% endblock %}
+
+{% block header %}
+<!-- Header -->
+<header id="mainHeader" class="position-fixed top-0 start-0 w-100 z-3">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm border-0">
+    <div class="container">
+      <!-- Logo -->
+      <a class="navbar-brand" href="{{ url_for('home') }}">
+        <img
+          src="{{ url_for('static', filename='images/Veda-X.png') }}"
+          alt="Veda-X logo"
+          class="img-fluid"
+          style="max-height: 40px"
+        />
+      </a>
+
+      <!-- Toggler -->
+      <button
+        class="navbar-toggler d-lg-none"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasNavbar"
+        aria-controls="offcanvasNavbar"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Offcanvas (mobile/tablet) -->
+      <div
+        class="offcanvas offcanvas-end d-lg-none"
+        tabindex="-1"
+        id="offcanvasNavbar"
+        aria-labelledby="offcanvasNavbarLabel"
+      >
+        <div class="offcanvas-header">
+          <a class="navbar-brand" href="{{ url_for('home') }}">
+            <img
+              src="{{ url_for('static', filename='images/Veda-X.png') }}"
+              alt="Veda-X logo"
+              class="img-fluid"
+              style="max-height: 40px"
+            />
+          </a>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+          ></button>
+        </div>
+
+        <div class="offcanvas-body">
+          <!-- Profile dropdown -->
+          <div class="dropdown mb-4">
+            <a
+              class="d-flex align-items-center text-decoration-none dropdown-toggle"
+              href="#"
+              id="offcanvasProfileDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <img
+                src="{{ url_for('static', filename='images/profile-user.png') }}"
+                alt="profile"
+                style="
+                  width: 44px;
+                  height: 44px;
+                  border-radius: 50%;
+                  object-fit: cover;
+                "
+              />
+              <span class="ms-2 fw-semibold">{{ session['username'] }}</span>
+            </a>
+            <ul
+              class="dropdown-menu"
+              aria-labelledby="offcanvasProfileDropdown"
+            >
+              <li>
+                <a class="dropdown-item" href="{{ url_for('viewresult') }}">View result</a>
+              </li>
+              <li>
+                <a class="dropdown-item text-danger" href="{{ url_for('logout') }}">Logout</a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Nav links -->
+          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 mb-3">
+            <li class="nav-item">
+              <a class="nav-link custom-nav-link active" href="#">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link custom-nav-link" href="#">Why Choose Us</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link custom-nav-link" href="{{ url_for('popularquiz') }}">Popular Quiz</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Desktop Nav -->
+      <div class="collapse navbar-collapse d-none d-lg-flex justify-content-end align-items-center">
+        <ul class="navbar-nav me-3">
+          <li class="nav-item">
+            <a class="nav-link custom-nav-link active" href="#">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link custom-nav-link" href="#">Why Choose Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link custom-nav-link" href="{{ url_for('popularquiz') }}">Popular Quiz</a>
+          </li>
+        </ul>
+
+        <!-- Profile dropdown -->
+        <div class="dropdown">
+          <a
+            class="d-flex align-items-center text-decoration-none dropdown-toggle"
+            href="#"
+            id="profileDropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <img
+              src="{{ url_for('static', filename='images/profile-user.png') }}"
+              alt="profile"
+              style="
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                object-fit: cover;
+              "
+            />
+            <span class="ms-2 fw-semibold">{{ session['username'] }}</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+            <li>
+              <a class="dropdown-item" href="{{ url_for('viewresult') }}">View result</a>
+            </li>
+            <li>
+              <a class="dropdown-item text-danger" href="{{ url_for('logout') }}">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+{% endblock %}
+
+{% block content %}
+<section class="mt-5 py-4">
+  <div class="container">
+    <div class="card shadow border-0 rounded-4" style="background: #fff">
+      <div class="card-body p-4 p-md-5">
+        <h3 class="mb-1">{{ skill.name }} Test</h3>
+        <p class="text-muted mb-3" style="font-size: 0.95rem">
+          Total Questions: {{ total }}
+        </p>
+
+        <!-- Score and Status -->
+        <div class="d-flex flex-column align-items-start gap-2">
+          <div class="fs-6">Score: <strong>{{ score }} / {{ total }}</strong></div>
+          <div>
+            <span class="text-muted me-2" style="font-size: 0.95rem">Status:</span>
+            {% if score >= (total/2) %}
+              <span class="badge rounded-pill bg-success px-3 py-2">Passed</span>
+            {% else %}
+              <span class="badge rounded-pill bg-danger px-3 py-2">Failed</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Answer Review Table -->
+<section class="py-3">
+  <div class="container">
+    <div class="card shadow border-0 rounded-4" style="background: #fff">
+      <div class="card-body p-4 p-md-5">
+        <h6 class="mb-3">Answer Review</h6>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 70px">Q.No</th>
+                <th>Question</th>
+                <th style="min-width: 160px">Your Answer</th>
+                <th style="min-width: 170px">Correct Answer</th>
+                <th style="width: 130px">Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in results %}
+              <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ r.question }}</td>
+                <td>{{ r.your_answer }}</td>
+                <td>{{ r.correct_answer }}</td>
+                <td class="{{ 'text-success' if r.is_correct else 'text-danger' }} fw-semibold">
+                  {% if r.is_correct %}
+                    &#10003; Correct
+                  {% else %}
+                    ✕ Wrong
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

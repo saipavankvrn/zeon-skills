@@ -1,0 +1,105 @@
+{% extends 'admin_dashboard.html' %}
+{% block title %}View Results - Veda-X{% endblock %}
+
+{% block main %}
+
+<!-- Header -->
+<div class="d-flex flex-row justify-content-between mb-3">
+  <h3 class="Categories">User Result Details</h3>
+  <a href="{{ url_for('admin_skillresults') }}">
+    <button type="button" class="btn btn-secondary h-75">Back</button>
+  </a>
+</div>
+
+<!-- User Info -->
+<div class="skills-card mb-3">
+  <div class="section-header mb-3">
+    <h5>User Information</h5>
+  </div>
+  <div class="d-flex flex-wrap gap-custom">
+    <div>
+      <p><b>Name:</b> {{ user.name }}</p>
+      <p><b>Email:</b> {{ user.email }}</p>
+      <p><b>Category:</b> {{ skill.category }}</p>
+    </div>
+    <div>
+      <p><b>Skill/Test:</b> {{ skill.name }}</p>
+      <p><b>Level:</b> {{ skill.level }}</p>
+      <p><b>Date:</b> {{ now.strftime('%d %b %Y') }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- Stats Section -->
+{% set score = detailed_results | selectattr("user_answer", "defined") 
+                                | selectattr("user_answer.is_correct", "equalto", True) 
+                                | list | length %}
+{% set total = detailed_results | length %}
+{% set percentage = (score / total * 100) if total > 0 else 0 %}
+{% set status = "Pass" if percentage >= 60 else ("Average" if percentage >= 40 else "Fail") %}
+
+<div class="row g-3 mb-3">
+  <div class="col-md-4">
+    <div class="card p-4 text-center">
+      <h4><b>{{ score }}/{{ total }}</b></h4>
+      <h6>Score</h6>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card p-4 text-center">
+      <h4><b>{{ "%.2f"|format(percentage) }}%</b></h4>
+      <h6>Percentage</h6>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card p-4 text-center">
+      <h4>
+        <b>
+          {% if status == "Pass" %}
+            <span class="text-success">{{ status }}</span>
+          {% elif status == "Average" %}
+            <span class="text-warning">{{ status }}</span>
+          {% else %}
+            <span class="text-danger">{{ status }}</span>
+          {% endif %}
+        </b>
+      </h4>
+      <h6>Status</h6>
+    </div>
+  </div>
+</div>
+
+<!-- Accordion with QnA review -->
+<div class="accordion accordion-flush mb-3" id="accordionFlushExample">
+  {% for result in detailed_results %}
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+        data-bs-target="#flush-{{ loop.index }}" aria-expanded="false" aria-controls="flush-{{ loop.index }}">
+        Q{{ loop.index }}: {{ result.question.question_text }}
+      </button>
+    </h2>
+    <div id="flush-{{ loop.index }}" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">
+        <p><b>Your Answer:</b>
+          {% if result.user_answer %}
+            {{ result.user_answer.answer_text }}
+          {% else %}
+            <span class="text-muted">Not Attempted</span>
+          {% endif %}
+        </p>
+        <p><b>Correct Answer:</b> {{ result.correct_answer.answer_text if result.correct_answer else "N/A" }}</p>
+        {% if result.user_answer and result.correct_answer %}
+          {% if result.user_answer.id == result.correct_answer.id %}
+            <p class="text-success fw-semibold">✔ Correct</p>
+          {% else %}
+            <p class="text-danger fw-semibold">✘ Wrong</p>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

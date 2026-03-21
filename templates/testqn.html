@@ -1,0 +1,247 @@
+{% extends 'home.html' %}
+{% block title %} {{ skill.name }} Test | Veda-X {% endblock %}
+{% block styles %}
+<style>
+    .question {
+        display: none;
+    }
+
+    .question.active {
+        display: block;
+    }
+      #countdownBox {
+        margin-top: 80px; 
+    }
+</style>
+{% endblock %}
+
+{% block header %}
+<header id="mainHeader" class="position-fixed top-0 start-0 w-100 z-3">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm border-0">
+        <div class="container">
+
+            <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/Veda-X.png') }}"
+                    alt="Veda-X" class="img-fluid" style="max-height:50px;"></a>
+
+            <button class="navbar-toggler d-md-block d-lg-none" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="offcanvas offcanvas-end d-md-block d-lg-none" tabindex="-1" id="offcanvasNavbar"
+                aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <img src="{{ url_for('static', filename='images/Veda-X.png') }}" alt="Veda-X" class="w-25 ">
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 mb-3">
+                        <li class="nav-item">
+                            <a class="nav-link custom-nav-link active" href="#">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link custom-nav-link" href="#">Why Choose Us</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link custom-nav-link" href="{{ url_for('popularquiz') }}">Popular Quiz</a>
+                        </li>
+                    </ul>
+                    <a href="{{ url_for('logout') }}"
+                        class="btn bg-body-tertiary text-dark border border-2 border-dark rounded-2 px-4 py-2 fs-6">
+                        Logout
+                    </a>
+                </div>
+            </div>
+
+
+            <div class="collapse navbar-collapse d-none d-lg-flex justify-content-end align-items-center">
+                <ul class="navbar-nav me-3">
+                    <li class="nav-item mx-3">
+                        <a class="nav-link custom-nav-link active" href="#">About</a>
+                    </li>
+                    <li class="nav-item mx-3">
+                        <a class="nav-link custom-nav-link" href="#">Why Choose Us</a>
+                    </li>
+                    <li class="nav-item mx-3">
+                        <a class="nav-link custom-nav-link" href="{{ url_for('popularquiz') }}">Popular Quiz</a>
+                    </li>
+                </ul>
+                <a href="{{ url_for('logout') }}"
+                    class="btn bg-body-tertiary text-dark border border-2 border-dark rounded-2 px-4 py-2 fs-6">
+                    Logout
+                </a>
+            </div>
+
+        </div>
+    </nav>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="alert alert-warning text-center fw-bold" id="countdownBox">
+    Time Remaining: <span id="timer">loading...</span>
+</div>
+
+<section class="w-100 d-flex align-items-center bg-dark mt-5 py-3 px-3">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+        <div class="d-flex flex-column">
+            <small class="text-secondary fw-semibold">Quiz name</small>
+            <div class="text-white fs-5 fw-bold">{{ skill.name }}</div>
+        </div>
+    </div>
+</section>
+
+<!-- Timer Notice -->
+{% if quiz_start and quiz_duration %}
+  {% set start = quiz_start | todatetime %}
+  {% set end = (start + timedelta(minutes=quiz_duration)) %}
+  <div class="alert alert-info text-center fw-bold">
+    You must submit before: <strong>{{ end.strftime("%H:%M:%S") }}</strong>
+  </div>
+{% endif %}
+
+<section class="container-fluid min-vh-100">
+    <div class="row align-items-center py-5">
+        <div class="col-12 col-md-7 col-lg-6">
+            <div class="px-4 px-md-5 mx-auto" style="max-width:720px;">
+
+                <!-- FORM START -->
+                <form action="{{ url_for('test', skill_id=skill.id) }}" method="POST" id="quizForm">
+
+
+                    <div id="quiz">
+                        {% for question in skill.questions %}
+                        <div class="question {% if loop.first %}active{% endif %}" id="q{{ loop.index }}">
+
+                            <div class="fs-5 fw-semibold text-dark">
+                                Question {{ loop.index }} of {{ skill.questions|length }}:
+                            </div>
+
+                            <div class="mt-4 fs-5 text-dark" style="max-width:520px;">
+                                {{ question.question_text }}
+                            </div>
+
+                            <div class="mt-4" style="max-width:520px;">
+                                {% for answer in question.answers %}
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="question_{{ question.id }}"
+                                        value="{{ answer.id }}" id="answer_{{ answer.id }}" required>
+                                    <label
+                                        class="form-check-label w-100 border border-light text-secondary fw-bold rounded-3 px-3 py-2 bg-white"
+                                        for="answer_{{ answer.id }}">
+                                        {{ answer.answer_text }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-5">
+                                {% if not loop.first %}
+                                <button type="button" class="btn btn-secondary px-4 py-2 fw-bold rounded-3 prev-btn"
+                                    data-question-num="{{ loop.index }}">
+                                    Previous
+                                </button>
+                                {% else %}
+                                <div></div>
+                                {% endif %}
+
+                                {% if loop.last %}
+                                <button type="submit" class="btn btn-success px-4 py-2 fw-bold rounded-3">
+                                    Submit
+                                </button>
+                                {% else %}
+                                <button type="button"
+                                    class="btn btn-info text-white px-4 py-2 fw-bold rounded-3 next-btn"
+                                    data-question-num="{{ loop.index }}">
+                                    Next
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% else %}
+                        <p>There are no questions for this skill yet.</p>
+                        {% endfor %}
+                    </div>
+                </form>
+                <!-- FORM END -->
+
+            </div>
+        </div>
+
+        <!-- Right side illustration -->
+        <div class="col-12 col-md-5 col-lg-6 d-none d-md-flex justify-content-center">
+            <div class="w-100" style="max-width:620px;">
+                <div class="bg-dark" style="height:24px;"></div>
+                <div class="position-relative overflow-hidden bg-white" style="height:360px;">
+                    <img src="{{ url_for('static', filename='images/quiz.jpg') }}" alt="Artwork"
+                        class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" />
+                </div>
+                <div class="bg-dark" style="height:24px;"></div>
+            </div>
+        </div>
+
+        <div class="col-12 d-block d-md-none mt-4">
+            <div class="w-100">
+                <div class="bg-dark" style="height:18px;"></div>
+                <div class="position-relative overflow-hidden bg-white" style="height:240px;">
+                    <img src="{{ url_for('static', filename='images/quiz.jpg') }}" alt="Artwork"
+                        class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" />
+                </div>
+                <div class="bg-dark" style="height:18px;"></div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function showQuestion(n) {
+        const questions = document.querySelectorAll('.question');
+        if (n > questions.length || n < 1) return;
+        questions.forEach(q => q.classList.remove('active'));
+        document.getElementById('q' + n).classList.add('active');
+    }
+
+    document.querySelectorAll('.next-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const currentQuestionNum = parseInt(this.getAttribute('data-question-num'));
+            showQuestion(currentQuestionNum + 1);
+        });
+    });
+
+    document.querySelectorAll('.prev-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const currentQuestionNum = parseInt(this.getAttribute('data-question-num'));
+            showQuestion(currentQuestionNum - 1);
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const totalQuestions = document.querySelectorAll('.question').length;
+    
+    let duration = totalQuestions * 30;
+
+    const display = document.getElementById('timer');
+    const form = document.getElementById('quizForm');
+
+    function startTimer(seconds) {
+        let timer = seconds, minutes, secs;
+        const interval = setInterval(function () {
+            minutes = Math.floor(timer / 60);
+            secs = timer % 60;
+            if (display) {
+                display.textContent = `${minutes}:${secs < 10 ? "0" + secs : secs}`;
+            }
+
+            if (--timer < 0) {
+                clearInterval(interval);
+                form.submit();
+            }
+            console.log('it work')
+        }, 1000);
+    }
+
+    if (display) startTimer(duration);
+    });
+</script>
+{% endblock %}

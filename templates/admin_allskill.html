@@ -1,0 +1,88 @@
+{% extends 'admin_dashboard.html' %}
+{% block title %}All Skills - Veda-X{% endblock %}
+
+{% block main %}
+
+      <div class="d-flex flex-row justify-content-between">
+        <h3 class="Categories">Skills</h3>
+        <a href="{{ url_for('admin_createskill') }}" class="btn btn-primary h-75">
+          + Create Skill
+        </a>
+      </div>
+      <div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">
+                Add New Category
+              </h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <p>Category Name</p>
+              <input
+                type="text"
+                placeholder="Enter Category Name"
+                class="form-control border w-100 p-2 rounded"
+              />
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="skills-card mb-4">
+        <div
+          class="section-header d-flex justify-content-between align-items-center"
+        ></div>
+        <div class="table-responsive">
+          <table class="custom-table category-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Category</th>
+                <th>Skill Name</th>
+                <th>Level</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for skill in skills %}
+              <tr>
+                <td>{{ skill.id }}</td>
+                <td>{{ skill.category }}</td>
+                <td>{{ skill.name }}</td>
+                <td>{{ skill.level }}</td>
+                <td class="table-buttons">
+                  <a href="{{ url_for('admin_editskill', skill_id=skill.id) }}"><button class="btn btn-warning">Edit</button></a>
+                  
+                  <form action="{{ url_for('admin_deleteskill', skill_id=skill.id) }}" method="POST" style="display:inline;">
+                    <button 
+                      type="submit" 
+                      class="btn btn-danger" 
+                      onclick="return confirm('Are you sure you want to delete this skill? This will also delete all associated questions.');">
+                      Delete
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div> 
+
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'admin_dashboard.html' %}
+{% block title %}Edit Skill - Veda-X{% endblock %}
+
+{% block main %}
+<div class="skills-card mb-4">
+    <div class="section-header p-3">
+        <h4>Edit Skill Details</h4>
+        <form method="POST" action="{{ url_for('admin_editskill', skill_id=skill.id) }}" class="d-grid gap-2">
+            <label class="form-label">Skill Name</label>
+            <input type="text" class="form-control" name="skill_name" value="{{ skill.name }}" required>
+
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" required>{{ skill.description }}</textarea>
+
+            <label class="form-label">Category</label>
+            <select class="form-select" name="category" required>
+                <option value="Programming" {% if skill.category == 'Programming' %}selected{% endif %}>Programming</option>
+                <option value="Design" {% if skill.category == 'Design' %}selected{% endif %}>Design</option>
+                <option value="Database" {% if skill.category == 'Database' %}selected{% endif %}>Database</option>
+                <option value="Marketing" {% if skill.category == 'Marketing' %}selected{% endif %}>Marketing</option>
+            </select>
+
+            <label class="form-label">Skill Level</label>
+            <select class="form-select" name="level" required>
+                <option value="Beginner" {% if skill.level == 'Beginner' %}selected{% endif %}>Beginner</option>
+                <option value="Intermediate" {% if skill.level == 'Intermediate' %}selected{% endif %}>Intermediate</option>
+                <option value="Advanced" {% if skill.level == 'Advanced' %}selected{% endif %}>Advanced</option>
+            </select>
+            <div class="d-flex justify-content-end mt-2">
+                <button type="submit" class="btn btn-primary">Save Skill Details</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="skills-card mb-4">
+    <div class="section-header p-3">
+        <h4 class="mb-3">Manage Questions</h4>
+        {% for question in skill.questions %}
+        <div class="question-block border rounded p-3 mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <label><b>Question {{ loop.index }}</b></label>
+        <!-- DELETE FORM -->
+        <form action="{{ url_for('admin_delete_question', question_id=question.id) }}" method="POST" class="ms-auto" onsubmit="return confirm('Are you sure you want to delete this question?');">
+            <button type="submit" class="btn btn-sm btn-outline-danger">Delete Question</button>
+        </form>
+    </div>
+
+    <!-- UPDATE FORM -->
+    <form method="POST" action="{{ url_for('admin_update_question', question_id=question.id) }}">
+        <input type="text" class="form-control mb-2" name="question_text" value="{{ question.question_text }}" required>
+        
+        <label class="form-label small">Answers (select the correct one):</label>
+        {% for answer in question.answers %}
+        <div class="input-group mb-2">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0" type="radio" name="correct_answer" value="{{ answer.id }}" {% if answer.is_correct %}checked{% endif %} required>
+            </div>
+            <input type="text" class="form-control" name="answer_text_{{ answer.id }}" value="{{ answer.answer_text }}" required>
+        </div>
+        {% endfor %}
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-sm btn-success">Update Question</button>
+        </div>
+    </form>
+    </div>
+
+        {% else %}
+        <p class="text-muted">This skill has no questions yet. Add one below.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="skills-card mb-4">
+    <div class="section-header p-3">
+        <h4>Add New Question</h4>
+        <form method="POST" action="{{ url_for('admin_add_question', skill_id=skill.id) }}" class="d-grid gap-2">
+            <label class="form-label">New Question Text</label>
+            <input type="text" class="form-control" name="new_question_text" placeholder="What is the new question?" required>
+            
+            <label class="form-label small">Answers (select the correct one):</label>
+            {% for i in range(4) %}
+            <div class="input-group">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="radio" name="new_correct_answer" value="{{ i }}" {% if i == 0 %}required{% endif %}>
+                </div>
+                <input type="text" class="form-control" name="new_answers[]" placeholder="Answer option {{ i + 1 }}" required>
+            </div>
+            {% endfor %}
+            <div class="d-flex justify-content-end mt-2">
+                <button type="submit" class="btn btn-info">+ Add This Question</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

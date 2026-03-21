@@ -1,0 +1,67 @@
+{% extends "admin_dashboard.html" %}
+
+{% block title %}Categories - Veda-X{% endblock %}
+
+{% block main %}
+<section class="mb-4">
+  <!-- Header with Add Button -->
+  <div class="d-flex flex-row justify-content-between align-items-center mb-3">
+    <h3 class="fw-bold m-0">Categories</h3>
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary px-3" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+      <i class="fa-solid fa-plus me-1"></i> Add Category
+    </button>
+  </div>
+
+  <!-- ===== Categories Table ===== -->
+  <div class="skills-card mb-4">
+    <div class="table-responsive">
+      <table class="table category-table text-center align-middle">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Category Name</th>
+          </tr>
+        </thead>
+        <tbody id="categoriesTableBody">
+          {% for cat in categories %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ cat.name }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Modal (Add Category) ===== -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="addCategoryModalLabel">Add New Category</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <label for="categoryName" class="form-label fw-semibold">Category Name</label>
+        <input type="text" id="categoryName" placeholder="Enter Category Name"
+          class="form-control border w-100 p-2 rounded">
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+       <button type="button" class="btn btn-primary" id="saveCategoryBtn">Save</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

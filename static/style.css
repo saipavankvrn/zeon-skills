@@ -1,0 +1,176 @@
+    body {
+      overflow-x: hidden;
+      font-family: 'Segoe UI', sans-serif; /* Sets font */
+      background-color: #e7effb; 
+      height: 100vh;
+    }
+    /* Sidebar desktop */
+    .sidebar {
+      width: 250px;
+      min-height: 100vh;
+      background-color: #fff;
+      color: #fff;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding-top: 20px 0;
+    }
+    .sidebar-logo {
+      width: 120px;
+      max-width: 120px; /* Logo width */
+      display: block; /* Block element */
+      margin: 20px auto; /* Centered horizontally */
+      margin-bottom: 40px;
+    }
+    .sidebar a {
+      color: #ddd;
+      padding: 12px 20px;
+      display: block;
+      text-decoration: none;
+      color: black;
+      margin: 5px 10px;
+      border-radius: 8px;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background-color: #2f80ed;
+      color: #fff;
+    }
+    .logo a:hover{
+      background-color: white;
+    }
+    .search-form input {
+        background-color: #e7effb;
+        border-radius: 20px;
+        border: 1px solid #ddd;
+        padding: 6px 15px;
+        width: auto;
+    }
+   
+    /* Main content */
+    .main {
+      margin-left: 250px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .top-bar{
+        background-color: white;
+        padding: 10px 20px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .profile{
+        border: 1px solid #d2d2d2;
+        border-radius: 30px;
+        padding: 3px;
+    }
+    .profile img {
+     width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #d2d2d2;
+    margin-right: 0;
+    }
+    .profile i {
+      color: #898989;
+    }
+ 
+    .status-dot{
+      position: absolute;
+      bottom: 5px;    /* adjust position */
+      left: 5px;     /* adjust position */
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      margin-left: 28px;
+    }
+    /* Stats cards */
+    .card-stats {
+      background-color: white;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 20px;
+      border-radius: 12px;
+      color: black;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .icon-circle {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: white;
+    }
+    .stats-purple .icon-circle {background: #6c5ce7;}
+    .stats-green .icon-circle {background: #00b894;}
+    .stats-orange .icon-circle {background: #f18831;}
+
+    /* Table */
+    .custom-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;/* No spacing */
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      border-radius: 15px; 
+    }
+    .custom-table th, .custom-table td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: center;
+      border: none;
+    }
+    .Categories{
+        margin-bottom: 20px;
+    }
+    .category-table{
+        border: none;
+    }
+    .category-table th{
+        background-color: rgb(234, 235, 236);
+    }
+    .category-table thead th,
+    .category-table tbody td {
+    border: none !important;   /* remove bottom borders too */
+    }
+
+    .skills-card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-decoration: none;
+    }
+    .skills-card h4 {
+      font-weight: 600px;
+      margin-bottom: 25px;
+    }
+    .see-all{
+      text-decoration: none;
+    }
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 15px;
+      font-size: 15px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #666;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .gap-custom{
+      gap: 20rem;
+    }

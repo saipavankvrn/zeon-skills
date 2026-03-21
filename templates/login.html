@@ -1,0 +1,49 @@
+{% extends 'home.html' %}
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<section class="w-100 px-3 d-flex justify-content-center align-items-center"
+    style="min-height:100vh; background-color:#f8f9fa;">
+    <div class="card p-4 mx-auto" style="max-width: 400px; width: 100%;">
+        <div class="text-center mb-4">
+            <a href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='images/Veda-X.png') }}" alt="Veda-X"
+                    class="mb-3 img-fluid" style="max-width: 120px;">
+            </a>
+            <h3 class="card-title mt-2">Login</h3>
+            <p>Access your account</p>
+        </div>
+
+        {# Flash messages #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} text-center" role="alert">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('login') }}" method="post">
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" name="username" placeholder="Enter your email" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-control" name="password" placeholder="Enter your password" required>
+            </div>
+            <div class="d-grid">
+                <button class="btn-login" type="submit">Login</button>
+            </div>
+        </form>
+
+        <p class="mt-3 text-center">
+            Don’t have an account?
+            <a href="{{ url_for('registration') }}">Register here</a>
+        </p>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,182 @@
+{% extends 'home.html' %}
+{% block title %} View Result | Veda-X{% endblock %}
+
+{% block header %}
+<!-- Header -->
+<header id="mainHeader" class="position-fixed top-0 start-0 w-100 z-3">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm border-0">
+    <div class="container">
+      <!-- Logo -->
+      <a class="navbar-brand" href="{{ url_for('home') }}">
+        <img
+          src="{{ url_for('static', filename='images/Veda-X.png') }}"
+          alt="Veda-X logo"
+          class="img-fluid"
+          style="max-height: 40px"
+        />
+      </a>
+
+      <!-- Toggler -->
+      <button
+        class="navbar-toggler d-lg-none"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasNavbar"
+        aria-controls="offcanvasNavbar"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Offcanvas (mobile/tablet) -->
+      <div
+        class="offcanvas offcanvas-end d-lg-none"
+        tabindex="-1"
+        id="offcanvasNavbar"
+        aria-labelledby="offcanvasNavbarLabel"
+      >
+        <div class="offcanvas-header">
+          <a class="navbar-brand" href="{{ url_for('home') }}">
+            <img
+              src="{{ url_for('static', filename='images/Veda-X.png') }}"
+              alt="Veda-X logo"
+              class="img-fluid"
+              style="max-height: 40px"
+            />
+          </a>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+          ></button>
+        </div>
+
+        <div class="offcanvas-body">
+          <!-- Profile dropdown -->
+          <div class="dropdown mb-4">
+            <a
+              class="d-flex align-items-center text-decoration-none dropdown-toggle"
+              href="#"
+              id="offcanvasProfileDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <img
+                src="{{ url_for('static', filename='images/profile-user.png') }}"
+                alt="profile"
+                style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover;"
+              />
+              <span class="ms-2 fw-semibold">{{ session['username'] }}</span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="offcanvasProfileDropdown">
+              <li>
+                <a class="dropdown-item" href="{{ url_for('viewresult') }}">View result</a>
+              </li>
+              <li>
+                <a class="dropdown-item text-danger" href="{{ url_for('logout') }}">Logout</a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Nav links -->
+          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 mb-3">
+            <li class="nav-item">
+              <a class="nav-link custom-nav-link active" href="#">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link custom-nav-link" href="#">Why Choose Us</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link custom-nav-link" href="{{ url_for('popularquiz') }}">Popular Quiz</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Desktop Nav -->
+      <div class="collapse navbar-collapse d-none d-lg-flex justify-content-end align-items-center">
+        <ul class="navbar-nav me-3">
+          <li class="nav-item"><a class="nav-link custom-nav-link active" href="#">About</a></li>
+          <li class="nav-item"><a class="nav-link custom-nav-link" href="#">Why Choose Us</a></li>
+          <li class="nav-item"><a class="nav-link custom-nav-link" href="{{ url_for('popularquiz') }}">Popular Quiz</a></li>
+        </ul>
+
+        <!-- Profile dropdown -->
+        <div class="dropdown">
+          <a
+            class="d-flex align-items-center text-decoration-none dropdown-toggle"
+            href="#"
+            id="profileDropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <img
+              src="{{ url_for('static', filename='images/profile-user.png') }}"
+              alt="profile"
+              style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover;"
+            />
+            <span class="ms-2 fw-semibold">{{ session['username'] }}</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+            <li><a class="dropdown-item" href="{{ url_for('viewresult') }}">View result</a></li>
+            <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+{% endblock %}
+
+{% block content %}
+<!-- Page Title -->
+<div class="text-center mt-5 pt-4">
+  <h2>Your Attempted Skills & Results</h2>
+</div>
+
+<!-- Results -->
+<div class="container my-4">
+  <div class="row g-3">
+    {% for r in results %}
+    <div class="col-md-6">
+      <div class="card p-3 border rounded">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="mb-1">{{ r.skill.name }}</h5>
+          <span class="badge rounded-pill 
+            {% if r.status == 'Passed' %} bg-success text-white 
+            {% elif r.status == 'Failed' %} bg-danger text-white 
+            {% else %} bg-warning text-dark {% endif %}">
+            {{ r.status }}
+          </span>
+        </div>
+        <p class="mb-2 text-muted">{{ r.total }} Questions</p>
+        <div class="d-flex justify-content-between align-items-center">
+          <p class="mb-0 fw-bold
+            {% if r.status == 'Passed' %} text-success 
+            {% elif r.status == 'Failed' %} text-danger 
+            {% else %} text-warning {% endif %}">
+            Score: {{ r.score }} / {{ r.total }}
+          </p>
+          <a href="{{ url_for('testresult', skill_id=r.skill.id) }}" class="btn btn-outline-primary btn-sm">View</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+    <!-- Summary -->
+    <div class="col-12">
+      <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body">
+          <h6 class="fw-semibold mb-3 text-dark">Summary</h6>
+          <ul class="list-unstyled ms-2 mb-0">
+            <li class="mb-2 text-success"><i class="bi bi-check2-circle"></i> Passed: {{ results | selectattr("status","equalto","Passed") | list | length }} Tests</li>
+            <li class="mb-2 text-danger"><i class="bi bi-x-circle"></i> Failed: {{ results | selectattr("status","equalto","Failed") | list | length }} Tests</li>
+            <li class="mb-2 text-warning"><i class="bi bi-hourglass-split"></i> Pending: {{ results | selectattr("status","equalto","Pending") | list | length }} Tests</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

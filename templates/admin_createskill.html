@@ -1,0 +1,93 @@
+{% extends 'admin_dashboard.html' %}
+{% block title %}Create Skill - Veda-X{% endblock %}
+
+{% block main %}
+<div class="skills-card mb-4">
+    <div class="section-header p-2">
+        <h4>Create New Skill</h4>
+
+        <form method="POST" action="{{ url_for('admin_createskill') }}" class="d-grid gap-1">
+
+            <label class="form-label">Skill Name</label>
+            <input type="text" class="form-control" name="skill_name" placeholder="Enter skill name" required>
+
+            <label class="form-label">Description</label>
+            <input type="text" class="form-control" name="description" placeholder="Enter a brief description" required>
+
+
+            <label class="form-label">Category</label>
+            <select class="form-select text-muted" name="category" required>
+                <option value="" disabled selected>Select Category</option>
+                <option value="Programming">Programming</option>
+                <option value="Design">Design</option>
+                <option value="Database">Database</option>
+                <option value="Marketing">Marketing</option>
+            </select>
+
+            <label class="form-label">Skill Level</label>
+            <select class="form-select text-muted" name="level" required>
+                <option value="" disabled selected>Select Level</option>
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+            </select>
+
+            <h6 class="mt-4"><b>Questions & Answers</b></h6>
+            <hr>
+
+            <div class="form-group">
+                <label for="num_questions">Number of Questions</label>
+                <input type="number" id="num_questions" class="form-control" min="1" max="20"
+                    placeholder="Enter number of questions">
+                <button type="button" class="btn btn-info mt-2" id="generateQuestionsBtn">Generate Questions</button>
+            </div>
+
+            <div id="questionsContainer"></div>
+
+            <div class="d-flex justify-content-end mt-3">
+                <button type="submit" class="btn btn-primary save-btn">Save Skill</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById("generateQuestionsBtn").addEventListener("click", function () {
+        let container = document.getElementById("questionsContainer");
+        container.innerHTML = ""; // clear old ones
+        let num = parseInt(document.getElementById("num_questions").value);
+
+        if (isNaN(num) || num < 1) {
+            alert("Please enter a valid number of questions.");
+            return;
+        }
+
+        for (let q = 0; q < num; q++) {
+            let questionBlock = document.createElement("div");
+            questionBlock.classList.add("question-block", "border", "p-3", "mb-3", "rounded");
+
+            questionBlock.innerHTML = `
+                <div class="form-group">
+                    <label>Question ${q + 1} Text</label>
+                    <input type="text" class="form-control" name="questions[${q}][text]" required>
+                </div>
+
+                ${[0, 1, 2, 3].map(i => `
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <input type="radio" name="questions[${q}][correct_answer]" value="${i}" ${i === 0 ? "required" : ""}>
+                        </div>
+                    </div>
+                    <input type="text" class="form-control" 
+                            name="questions[${q}][answers][]" 
+                            placeholder="${i === 0 ? "Correct Answer Option" : "Wrong Answer Option " + i}" required>
+                </div>
+                `).join("")}
+            `;
+
+            container.appendChild(questionBlock);
+        }
+    });
+</script>
+{% endblock %}
