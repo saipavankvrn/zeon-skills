@@ -1,5 +1,5 @@
 {% extends 'home.html' %}
-{% block title %} Quiz Vew | Veda-X{% endblock %}
+{% block title %} Quiz View | Zeon Skills{% endblock %}
 {% block css %}
     <link rel="stylesheet" href="assets/css/responsive.css" />
 {% endblock %}
@@ -10,7 +10,7 @@
             <div class="container">
 
                 <!-- Logo -->
-                <img src="static/images/Veda-X.png" alt="Veda-X" class="img-fluid" style="max-height:50px;">
+                <img src="{{ url_for('static', filename='images/zeon-skills.png') }}" alt="Zeon Skills" class="img-fluid" style="max-height:50px;">
 
                 <!-- Toggler visible only between md and lg screens -->
                 <button class="navbar-toggler d-md-block d-lg-none" type="button" data-bs-toggle="offcanvas"
@@ -22,7 +22,7 @@
                 <div class="offcanvas offcanvas-end d-md-block d-lg-none" tabindex="-1" id="offcanvasNavbar"
                     aria-labelledby="offcanvasNavbarLabel">
                     <div class="offcanvas-header">
-                        <img src="static/images/Veda-X.png" alt="Veda-X" class="w-25 ">
+                        <img src="{{ url_for('static', filename='images/zeon-skills.png') }}" alt="Zeon Skills" class="w-25 ">
                         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div class="offcanvas-body">

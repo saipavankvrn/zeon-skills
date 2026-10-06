@@ -3,7 +3,7 @@
 
 <head>
   <!--Title-->
-  <title>{% block title %} Veda-X {% endblock %}</title>
+  <title>{% block title %} Zeon Skills {% endblock %}</title>
 
   <!--Meta Tags-->
   <meta charset="UTF-8" />
@@ -27,7 +27,7 @@
   {% endblock %}
   <!--Responsive CSS-->
 <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/responsive.css') }}">
-  <link rel="icon" type="image/x-icon" href="static/images/Veda-X.ico" />
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/zeon-skills.ico') }}" />
 </head>
 
 <body class="d-flex flex-column min-vh-100 bg-body-tertiary">
@@ -38,7 +38,7 @@
       <div class="container">
         <!-- Logo -->
         <a class="navbar-brand" href="#">
-          <img src="static/images/Veda-X.png" alt="digit-it logo" class="img-fluid" style="max-height: 40px" />
+          <img src="{{ url_for('static', filename='images/zeon-skills.png') }}" alt="Zeon Skills logo" class="img-fluid" style="max-height: 40px" />
         </a>
         <!-- Toggler visible only on small & md screens -->
         <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="offcanvas"
@@ -50,7 +50,7 @@
           aria-labelledby="offcanvasNavbarLabel">
           <div class="offcanvas-header">
             <a class="navbar-brand" href="#">
-              <img src="static/images/Veda-X.png" alt="digit-it logo" class="img-fluid" style="max-height: 40px" />
+              <img src="{{ url_for('static', filename='images/zeon-skills.png') }}" alt="Zeon Skills logo" class="img-fluid" style="max-height: 40px" />
             </a>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
@@ -538,7 +538,7 @@
   {% endblock %} {% block footer %} {% if footer %}
   <footer class="bg-dark text-white py-3 mt-auto">
     <div class="container text-center small">
-      &copy; 2025 <span class="fw-bold">VEDA-X</span>. All Rights
+      &copy; 2025 <span class="fw-bold">ZEON SKILLS</span>. All Rights
       Reserved.
     </div>
   </footer>

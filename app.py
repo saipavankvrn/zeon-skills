@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import timedelta
 from datetime import datetime
 import random
+import os
 
 app = Flask(__name__)
 
@@ -10,6 +11,9 @@ app.secret_key = 'wxyz'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=180)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['ADMIN_EMAIL_DOMAINS'] = [
+    d.strip().lower() for d in os.environ.get('ADMIN_EMAIL_DOMAINS', '@zeonskills.com').split(',') if d.strip()
+]
 
 db = SQLAlchemy(app)
 
@@ -104,7 +108,8 @@ def registration():
         name = request.form['name']
         email = request.form['email']
         password = request.form['password']
-        role = 'admin' if email.endswith('@veda-x.com') else 'user'
+        admin_domains = app.config.get('ADMIN_EMAIL_DOMAINS', ['@zeonskills.com'])
+        role = 'admin' if any(email.strip().lower().endswith(d) for d in admin_domains) else 'user'
         if User.query.filter_by(email=email).first():
             flash("Email already registered", "danger")
             return redirect(url_for('registration'))

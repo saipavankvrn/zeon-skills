@@ -1,5 +1,5 @@
 {% extends 'home.html' %}
-{% block title %} {{ skill.name }} Test | Veda-X {% endblock %}
+{% block title %} {{ skill.name }} Test | Zeon Skills {% endblock %}
 {% block styles %}
 <style>
     .question {
@@ -20,8 +20,8 @@
     <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm border-0">
         <div class="container">
 
-            <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/Veda-X.png') }}"
-                    alt="Veda-X" class="img-fluid" style="max-height:50px;"></a>
+            <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/zeon-skills.png') }}"
+                    alt="Zeon Skills" class="img-fluid" style="max-height:50px;"></a>
 
             <button class="navbar-toggler d-md-block d-lg-none" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
@@ -31,7 +31,7 @@
             <div class="offcanvas offcanvas-end d-md-block d-lg-none" tabindex="-1" id="offcanvasNavbar"
                 aria-labelledby="offcanvasNavbarLabel">
                 <div class="offcanvas-header">
-                    <img src="{{ url_for('static', filename='images/Veda-X.png') }}" alt="Veda-X" class="w-25 ">
+                    <img src="{{ url_for('static', filename='images/zeon-skills.png') }}" alt="Zeon Skills" class="w-25 ">
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">

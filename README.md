@@ -1,6 +1,6 @@
-# Veda-X 
+# Zeon Skills
 
-Veda-X (formerly Zeon Skill) is a robust **Skill Assessment and Learning Management System (LMS)** built with Python and Flask. This platform allows administrators to create interactive, timed multiple-choice quizzes, while users can take those tests to evaluate their knowledge across various subjects.
+**Zeon Skills** is a robust **Skill Assessment and Learning Management System (LMS)** built with Python and Flask. This platform allows administrators to create interactive, timed multiple-choice quizzes, while users can take those tests to evaluate their knowledge across various subjects.
 
 ---
 
@@ -16,7 +16,7 @@ Veda-X (formerly Zeon Skill) is a robust **Skill Assessment and Learning Managem
 * **Admin Dashboard:** Access a centralized control panel to monitor platform statistics, total test attempts, and total registered users.
 * **Content Management:** Create, Read, Update, and Delete categories and customized skill quizzes.
 * **Question Editor:** Add and edit customized multiple-choice questions for any quiz.
-* **User Analytics:** Track student progress. Drill down into specific user attempts to see exactly which questions a user struggled with. *(Accounts registered with `@veda-x.com` automatically gain Admin rights).*
+* **User Analytics:** Track student progress. Drill down into specific user attempts to see exactly which questions a user struggled with. *(Accounts registered with `@zeonskills.com` or custom domains configured in `ADMIN_EMAIL_DOMAINS` automatically gain Admin rights).*
 
 ---
 
@@ -72,4 +72,4 @@ Veda-X (formerly Zeon Skill) is a robust **Skill Assessment and Learning Managem
 ---
 
 ## 📄 License & Rights
-© 2025 Veda-X. All Rights Reserved.
+© 2025 Zeon Skills. All Rights Reserved.

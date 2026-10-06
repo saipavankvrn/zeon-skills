@@ -4,11 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Veda-X Dashboard{% endblock %}</title>
+  <title>{% block title %}Zeon Skills Dashboard{% endblock %}</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css" rel="stylesheet">
-  <link rel="icon" type="image/x-icon" href="static/images/Veda-X.ico" />
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/zeon-skills.ico') }}" />
 
   <link rel="stylesheet" href="{{ url_for('static', filename='responsiveness.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -21,7 +21,7 @@
   <aside class="sidebar d-none d-lg-block">
     <div class="logo px-3">
       <a href="{{ url_for('admin_dashboard') }}">
-        <img src="{{ url_for('static', filename='images/Veda-X.png') }}" alt="Zeon Logo" class="sidebar-logo">
+        <img src="{{ url_for('static', filename='images/zeon-skills.png') }}" alt="Zeon Skills Logo" class="sidebar-logo">
       </a>
     </div>
     <nav class="nav flex-column">
@@ -46,7 +46,7 @@
 
   <div class="offcanvas offcanvas-start bg-white" tabindex="-1" id="mobileSidebar">
     <div class="offcanvas-header">
-      <h5 class="offcanvas-title">Veda-X</h5>
+      <h5 class="offcanvas-title">Zeon Skills</h5>
       <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body">
@@ -166,7 +166,7 @@
 
 {% block footer %}
     <footer id="openSkills" class="text-center py-3">
-      &copy; {{ current_year or "2025" }} Veda-X, All Rights Reserved
+      &copy; {{ current_year or "2025" }} Zeon Skills, All Rights Reserved
     </footer>
   </main>
 {% endblock %}
