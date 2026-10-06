@@ -1,0 +1,207 @@
+{% extends 'home.html' %}
+{% block title %}My Profile | Zeon Skills{% endblock %}
+
+{% block id %}
+<header id="header2" class="position-fixed z-3 w-100 pt-3">
+{% endblock %}
+
+{% block content %}
+<main class="flex-fill" style="padding-top: 110px; padding-bottom: 60px; min-height: 85vh; background-color: #f8fafd;">
+  <div class="container">
+    
+    <!-- Header / Title -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-2">
+            <li class="breadcrumb-item"><a href="{{ url_for('home') }}" class="text-decoration-none" style="color: #007bff;">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Profile</li>
+          </ol>
+        </nav>
+        <h2 class="fw-bold" style="color: #2f327d;">Account Profile</h2>
+        <p class="text-muted">Manage your personal information, account security, and review your learning progress.</p>
+      </div>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="row mb-3">
+          <div class="col-12">
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="row g-4">
+      <!-- Left Column: User Summary & Stats -->
+      <div class="col-lg-4">
+        <!-- Profile Card -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 text-center mb-4 bg-white">
+          <div class="position-relative d-inline-block mx-auto mb-3">
+            <img src="{{ url_for('static', filename='images/profile-user.png') }}" alt="{{ user.name }}" 
+                 class="rounded-circle border border-3 border-primary shadow-sm" 
+                 style="width: 100px; height: 100px; object-fit: cover;">
+          </div>
+          <h4 class="fw-bold mb-1" style="color: #2f327d;">{{ user.name }}</h4>
+          <p class="text-muted small mb-2">{{ user.email }}</p>
+          
+          <div class="d-flex justify-content-center gap-2 mb-3">
+            {% if user.role == 'admin' %}
+              <span class="badge bg-danger-subtle text-danger px-3 py-2 rounded-pill fw-semibold">
+                <i class="fas fa-shield-alt me-1"></i>Administrator
+              </span>
+            {% else %}
+              <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-semibold">
+                <i class="fas fa-user-graduate me-1"></i>Candidate / User
+              </span>
+            {% endif %}
+            <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill fw-semibold">
+              <i class="fas fa-check-circle me-1"></i>Active
+            </span>
+          </div>
+
+          <hr class="my-3">
+
+          <div class="text-start">
+            <div class="d-flex justify-content-between py-2 border-bottom">
+              <span class="text-muted small">User ID:</span>
+              <span class="fw-bold small">#{{ user.id }}</span>
+            </div>
+            <div class="d-flex justify-content-between py-2 border-bottom">
+              <span class="text-muted small">Role:</span>
+              <span class="fw-bold small text-capitalize">{{ user.role }}</span>
+            </div>
+            <div class="d-flex justify-content-between py-2 border-bottom">
+              <span class="text-muted small">Quizzes Attempted:</span>
+              <span class="fw-bold small text-primary">{{ attempted_count }}</span>
+            </div>
+            <div class="d-flex justify-content-between py-2">
+              <span class="text-muted small">Available Quizzes:</span>
+              <span class="fw-bold small text-success">{{ total_skills }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Navigation -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+          <h6 class="fw-bold mb-3" style="color: #2f327d;">Quick Links</h6>
+          <div class="d-grid gap-2">
+            <a href="{{ url_for('viewresult') }}" class="btn btn-outline-primary text-start">
+              <i class="fas fa-poll me-2"></i>View My Quiz Results
+            </a>
+            <a href="{{ url_for('popularquiz') }}" class="btn btn-outline-success text-start">
+              <i class="fas fa-book-open me-2"></i>Explore All Quizzes
+            </a>
+            {% if user.role == 'admin' %}
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-danger text-start">
+              <i class="fas fa-tools me-2"></i>Admin Dashboard
+            </a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" class="btn btn-outline-secondary text-start text-danger">
+              <i class="fas fa-sign-out-alt me-2"></i>Logout
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Edit Profile & Change Password -->
+      <div class="col-lg-8">
+        
+        <!-- Card 1: Edit Profile -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white">
+          <div class="d-flex align-items-center mb-3">
+            <div class="rounded-circle d-flex align-items-center justify-content-center me-3" 
+                 style="width: 44px; height: 44px; background: #e6f4ff; color: #007bff; font-size: 20px;">
+              <i class="fas fa-user-edit"></i>
+            </div>
+            <div>
+              <h5 class="fw-bold mb-0" style="color: #2f327d;">Edit Profile Information</h5>
+              <small class="text-muted">Update your display name and email address</small>
+            </div>
+          </div>
+
+          <form action="{{ url_for('profile') }}" method="POST">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="profileName" class="form-label fw-semibold small">Full Name</label>
+                <input type="text" class="form-control" id="profileName" name="name" 
+                       value="{{ user.name }}" required minlength="2" maxlength="100">
+              </div>
+              <div class="col-md-6">
+                <label for="profileEmail" class="form-label fw-semibold small">Email Address</label>
+                <input type="email" class="form-control" id="profileEmail" name="email" 
+                       value="{{ user.email }}" required maxlength="100">
+              </div>
+              <div class="col-md-12">
+                <label class="form-label fw-semibold small text-muted">Role</label>
+                <input type="text" class="form-control bg-light" value="{{ user.role|capitalize }}" disabled readonly>
+                <small class="text-muted d-block mt-1">
+                  <i class="fas fa-lock me-1"></i>Role permissions are managed securely by administrators and cannot be altered here.
+                </small>
+              </div>
+              <div class="col-12 text-end pt-2">
+                <button type="submit" class="btn btn-primary px-4 fw-semibold rounded-pill">
+                  <i class="fas fa-save me-1"></i>Save Profile Changes
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Card 2: Change Password -->
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+          <div class="d-flex align-items-center mb-3">
+            <div class="rounded-circle d-flex align-items-center justify-content-center me-3" 
+                 style="width: 44px; height: 44px; background: #fff4e6; color: #fd7e14; font-size: 20px;">
+              <i class="fas fa-key"></i>
+            </div>
+            <div>
+              <h5 class="fw-bold mb-0" style="color: #2f327d;">Change Password</h5>
+              <small class="text-muted">Keep your account secure by using a strong password</small>
+            </div>
+          </div>
+
+          <form action="{{ url_for('change_password') }}" method="POST">
+            <div class="row g-3">
+              <div class="col-12">
+                <label for="currentPassword" class="form-label fw-semibold small">Current Password</label>
+                <input type="password" class="form-control" id="currentPassword" name="current_password" 
+                       required placeholder="Enter your current password">
+              </div>
+              <div class="col-md-6">
+                <label for="newPassword" class="form-label fw-semibold small">New Password</label>
+                <input type="password" class="form-control" id="newPassword" name="new_password" 
+                       required minlength="6" placeholder="At least 6 characters">
+              </div>
+              <div class="col-md-6">
+                <label for="confirmPassword" class="form-label fw-semibold small">Confirm New Password</label>
+                <input type="password" class="form-control" id="confirmPassword" name="confirm_password" 
+                       required minlength="6" placeholder="Re-enter new password">
+              </div>
+              <div class="col-12">
+                <div class="p-3 bg-light rounded-3 small text-muted">
+                  <i class="fas fa-shield-alt text-primary me-1"></i>
+                  Password requirements: Minimum 6 characters. Passwords are securely hashed with industry-standard encryption.
+                </div>
+              </div>
+              <div class="col-12 text-end pt-2">
+                <button type="submit" class="btn btn-warning px-4 fw-semibold rounded-pill text-dark">
+                  <i class="fas fa-lock me-1"></i>Update Password
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

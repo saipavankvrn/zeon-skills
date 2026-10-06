@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
 from datetime import datetime
 import random
 import os
+import re
 
 app = Flask(__name__)
 
@@ -17,12 +19,24 @@ app.config['ADMIN_EMAIL_DOMAINS'] = [
 
 db = SQLAlchemy(app)
 
+# Helper for secure password checking with backwards compatibility
+def verify_password(stored_password, provided_password):
+    if not stored_password or not provided_password:
+        return False
+    try:
+        if check_password_hash(stored_password, provided_password):
+            return True
+    except Exception:
+        pass
+    # Backwards compatibility fallback for existing plain text passwords
+    return stored_password == provided_password
+
 # --- DATABASE MODELS ---
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
     role = db.Column(db.String(10), nullable=False, default='user')
 
 class Skill(db.Model):
@@ -77,17 +91,22 @@ with app.app_context():
 # --- AUTH & USER ROUTES ---
 @app.route('/', methods=['GET', 'POST'])
 def login():
-    if 'username' in session:
+    if 'username' in session and 'user_id' in session:
         if session.get('role') == 'admin':
             return redirect(url_for('admin_dashboard'))
         return redirect(url_for('home'))
 
     if request.method == 'POST':
-        email = request.form['username']
-        password = request.form['password']
-        user = User.query.filter_by(email=email, password=password).first()
+        email = request.form.get('username', '').strip()
+        password = request.form.get('password', '')
+        user = User.query.filter_by(email=email).first()
 
-        if user:
+        if user and verify_password(user.password, password):
+            # Migrate legacy plain-text password to hash if needed
+            if not user.password.startswith(('scrypt:', 'pbkdf2:')):
+                user.password = generate_password_hash(password)
+                db.session.commit()
+
             session['username'] = user.name
             session['email'] = user.email
             session['role'] = user.role
@@ -105,18 +124,34 @@ def login():
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
     if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        password = request.form['password']
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip().lower()
+        password = request.form.get('password', '')
+
+        if not name or not email or not password:
+            flash("All fields are required.", "danger")
+            return redirect(url_for('registration'))
+
+        email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        if not re.match(email_pattern, email):
+            flash("Please enter a valid email address.", "danger")
+            return redirect(url_for('registration'))
+
+        if len(password) < 6:
+            flash("Password must be at least 6 characters long.", "danger")
+            return redirect(url_for('registration'))
+
         admin_domains = app.config.get('ADMIN_EMAIL_DOMAINS', ['@zeonskills.com'])
-        role = 'admin' if any(email.strip().lower().endswith(d) for d in admin_domains) else 'user'
+        role = 'admin' if any(email.endswith(d) for d in admin_domains) else 'user'
         if User.query.filter_by(email=email).first():
             flash("Email already registered", "danger")
             return redirect(url_for('registration'))
-        new_user = User(name=name, email=email, password=password, role=role)
+
+        hashed_password = generate_password_hash(password)
+        new_user = User(name=name, email=email, password=hashed_password, role=role)
         db.session.add(new_user)
         db.session.commit()
-        flash("Successfully Registered!", "success")
+        flash("Successfully Registered! Please login.", "success")
         return redirect(url_for('login'))
     return render_template("registration.html")
 
@@ -126,14 +161,109 @@ def logout():
     flash("You have been logged out.", "info")
     return redirect(url_for('login'))
 
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    if 'user_id' not in session or 'username' not in session:
+        flash("Please log in to access your profile.", "warning")
+        return redirect(url_for('login'))
+
+    user = User.query.filter_by(id=session['user_id']).first()
+    if not user:
+        session.clear()
+        flash("User session invalid. Please log in again.", "danger")
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip().lower()
+
+        if not name or len(name) < 2 or len(name) > 100:
+            flash("Name must be between 2 and 100 characters.", "danger")
+            return redirect(url_for('profile'))
+
+        email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        if not email or not re.match(email_pattern, email):
+            flash("Please provide a valid email address.", "danger")
+            return redirect(url_for('profile'))
+
+        if email != user.email.lower():
+            existing = User.query.filter(User.email == email, User.id != user.id).first()
+            if existing:
+                flash("This email address is already in use by another account.", "danger")
+                return redirect(url_for('profile'))
+            user.email = email
+            session['email'] = email
+
+        user.name = name
+        session['username'] = name
+        # Security: User role is controlled solely by the backend and NEVER modified here
+        db.session.commit()
+        flash("Profile updated successfully!", "success")
+        return redirect(url_for('profile'))
+
+    attempted_count = UserSkillAttempt.query.filter_by(user_id=user.id).count()
+    total_skills = Skill.query.count()
+    return render_template(
+        "profile.html",
+        user=user,
+        attempted_count=attempted_count,
+        total_skills=total_skills,
+        header=True,
+        footer=True
+    )
+
+@app.route('/change-password', methods=['POST'])
+def change_password():
+    if 'user_id' not in session:
+        flash("Please log in to change your password.", "warning")
+        return redirect(url_for('login'))
+
+    user = User.query.filter_by(id=session['user_id']).first()
+    if not user:
+        session.clear()
+        flash("User session invalid. Please log in again.", "danger")
+        return redirect(url_for('login'))
+
+    current_password = request.form.get('current_password', '')
+    new_password = request.form.get('new_password', '')
+    confirm_password = request.form.get('confirm_password', '')
+
+    if not current_password or not new_password or not confirm_password:
+        flash("All password fields are required.", "danger")
+        return redirect(url_for('profile'))
+
+    if not verify_password(user.password, current_password):
+        flash("Current password is incorrect.", "danger")
+        return redirect(url_for('profile'))
+
+    if new_password != confirm_password:
+        flash("New password and confirm password do not match.", "danger")
+        return redirect(url_for('profile'))
+
+    if len(new_password) < 6:
+        flash("New password must be at least 6 characters long.", "danger")
+        return redirect(url_for('profile'))
+
+    if verify_password(user.password, new_password):
+        flash("New password cannot be the same as your current password.", "warning")
+        return redirect(url_for('profile'))
+
+    user.password = generate_password_hash(new_password)
+    db.session.commit()
+    flash("Password changed successfully!", "success")
+    return redirect(url_for('profile'))
+
 @app.route('/home')
 def home():
-    if 'username' not in session or session.get('role') != 'user':
+    if 'username' not in session:
         return redirect(url_for('login'))
     return render_template("home.html", header=True, footer=True)
 
 @app.route('/popularquiz')
 def popularquiz():
+    if 'username' not in session:
+        flash("Please log in to browse quizzes.", "warning")
+        return redirect(url_for('login'))
     all_skills = Skill.query.all()
     skills_by_category = {}
     for skill in all_skills:
@@ -245,7 +375,9 @@ def test(skill_id):
 
 @app.route('/quizview')
 def quizview():
-    return render_template("quizview.html", footer=True)
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    return render_template("quizview.html", header=True, footer=True)
 
 # --- VIEW RESULT FOR SPECIFIC SKILL (BY QUERY PARAM) ---
 @app.route('/testresult')
@@ -394,6 +526,8 @@ def admin_createskill():
 
 @app.route('/admin_allskill')
 def admin_allskill():
+    if session.get('role') != 'admin':
+        return redirect(url_for('login'))
     all_skills = Skill.query.all()
     return render_template("admin_allskill.html", skills=all_skills, footer=True, sidebar=True, header=True)
 
@@ -409,17 +543,25 @@ def admin_deleteskill(skill_id):
 
 @app.route("/add_category", methods=["POST"])
 def add_category():
+    if session.get('role') != 'admin':
+        return jsonify({"success": False, "error": "Unauthorized"}), 403
     data = request.get_json()
-    category_name = data.get("name")
+    category_name = data.get("name") if data else None
     if category_name:
+        category_name = category_name.strip()
+        existing = Category.query.filter_by(name=category_name).first()
+        if existing:
+            return jsonify({"success": True, "message": "Category already exists", "id": existing.id})
         new_category = Category(name=category_name)
         db.session.add(new_category)
         db.session.commit()
-        return jsonify({"success": True})
-    return jsonify({"success": False})
+        return jsonify({"success": True, "id": new_category.id})
+    return jsonify({"success": False, "error": "Category name required"}), 400
 
 @app.route('/admin_categories')
 def admin_categories():
+    if session.get('role') != 'admin':
+        return redirect(url_for('login'))
     categories = Category.query.all()
     return render_template(
         "admin_categories.html",

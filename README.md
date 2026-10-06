@@ -38,8 +38,8 @@
 
 1. **Clone the repository** (if you haven't already):
    ```bash
-   git clone https://github.com/saipavankvrn/Veda-X.git
-   cd Veda-X
+   git clone https://github.com/saipavankvrn/Zeon-Skills.git
+   cd "Zeon Skills"
    ```
 
 2. **Set up a Virtual Environment**:

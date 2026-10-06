@@ -41,6 +41,9 @@
           <li><a href="{{ url_for('admin_skillresults') }}" class="text-decoration-none text-black">Skill Results</a></li>
         </ul>
       </div>
+      <hr class="my-2">
+      <a class="nav-link text-black" href="{{ url_for('profile') }}"><i class="fa-solid fa-user me-2"></i> Profile</a>
+      <a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fa-solid fa-right-from-bracket me-2"></i> Logout</a>
     </nav>
   </aside>
 
@@ -67,6 +70,9 @@
             <li><a href="{{ url_for('admin_skillresults') }}" class="text-decoration-none text-black">Skill Results</a></li>
           </ul>
         </div>
+        <hr class="my-2">
+        <a class="nav-link text-black" href="{{ url_for('profile') }}"><i class="fa-solid fa-user me-2"></i> Profile</a>
+        <a class="nav-link text-danger" href="{{ url_for('logout') }}"><i class="fa-solid fa-right-from-bracket me-2"></i> Logout</a>
       </nav>
     </div>
   </div>
@@ -88,11 +94,22 @@
       </div>
 
       <div class="profile dropdown">
-        <img src="{{ url_for('static', filename='images/user (1).png') }}" alt="profile" class="rounded-circle" width="40">
-        <span class="status-dot bg-success"></span>
-        <i class="fa-solid fa-chevron-down m-2" data-bs-toggle="dropdown"></i>
-        <ul class="dropdown-menu dropdown-menu-end">
-          <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+        <a href="#" class="d-flex align-items-center text-decoration-none text-dark" data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="{{ url_for('static', filename='images/user (1).png') }}" alt="profile" class="rounded-circle" width="40">
+          <span class="status-dot bg-success"></span>
+          <span class="ms-2 fw-semibold d-none d-sm-inline">{{ session.get('username') }}</span>
+          <i class="fa-solid fa-chevron-down m-2"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+          <li class="px-3 py-2 border-bottom">
+            <span class="fw-bold d-block">{{ session.get('username') }}</span>
+            <small class="text-muted d-block">{{ session.get('email') }}</small>
+            <span class="badge bg-danger-subtle text-danger mt-1">Administrator</span>
+          </li>
+          <li><a class="dropdown-item py-2" href="{{ url_for('profile') }}"><i class="fa-solid fa-user me-2 text-primary"></i>Profile</a></li>
+          <li><a class="dropdown-item py-2" href="{{ url_for('home') }}"><i class="fa-solid fa-house me-2 text-success"></i>User Site</a></li>
+          <li><hr class="dropdown-divider my-1"></li>
+          <li><a class="dropdown-item py-2 text-danger" href="{{ url_for('logout') }}"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout</a></li>
         </ul>
       </div>
     </header>

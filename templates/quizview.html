@@ -4,71 +4,12 @@
     <link rel="stylesheet" href="assets/css/responsive.css" />
 {% endblock %}
 
-{% block header %}
-<header id="mainHeader" class="position-fixed top-0 start-0 w-100 z-3">
-        <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm border-0">
-            <div class="container">
-
-                <!-- Logo -->
-                <img src="{{ url_for('static', filename='images/zeon-skills.png') }}" alt="Zeon Skills" class="img-fluid" style="max-height:50px;">
-
-                <!-- Toggler visible only between md and lg screens -->
-                <button class="navbar-toggler d-md-block d-lg-none" type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <!-- Offcanvas menu ... -->
-                <div class="offcanvas offcanvas-end d-md-block d-lg-none" tabindex="-1" id="offcanvasNavbar"
-                    aria-labelledby="offcanvasNavbarLabel">
-                    <div class="offcanvas-header">
-                        <img src="{{ url_for('static', filename='images/zeon-skills.png') }}" alt="Zeon Skills" class="w-25 ">
-                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <div class="offcanvas-body">
-                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3  mb-3">
-                            <li class="nav-item">
-                                <a class="nav-link custom-nav-link active" href="#">About</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link custom-nav-link" href="#">Why Choose Us</a>
-                            </li>
-                            <li class="nav-item ">
-                                <a class="nav-link custom-nav-link" href="#">Popular Quiz</a>
-                            </li>
-                            <a href="#"
-                                class="btn bg-body-tertiary text-dark border border-2 border-dark rounded-2 px-4 py-2 fs-6">
-                                Started
-                            </a>
-                    </div>
-                </div>
-
-
-                <!-- Standard nav for lg+ screens -->
-                <div class="collapse navbar-collapse d-none d-lg-flex justify-content-end align-items-center">
-                    <ul class="navbar-nav me-3">
-                        <li class="nav-item mx-3">
-                            <a class="nav-link custom-nav-link active" href="#">About</a>
-                        </li>
-                        <li class="nav-item mx-3">
-                            <a class="nav-link custom-nav-link" href="#">Why Choose Us</a>
-                        </li>
-                        <li class="nav-item mx-3">
-                            <a class="nav-link custom-nav-link" href="#">Popular Quiz</a>
-                        </li>
-                    </ul>
-                    <a href="#"
-                        class="btn bg-body-tertiary text-dark border border-2 border-dark rounded-2 px-4 py-2 fs-6">
-                        Started
-                    </a>
-                </div>
-
-            </div>
-        </nav>
-    </header>
+{% block id %}
+<header id="header2" class="position-fixed z-3 w-100 pt-3">
 {% endblock %}
+
 {% block content %}
-<section class="bg-custom py-5 position-relative py-5">
+<section class="py-5 position-relative" style="padding-top: 100px !important;">
 
         <div class="container py-5">
             <div class="row">
@@ -81,9 +22,9 @@
                         Select Level
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Intermediate</a></li>
-                        <li><a class="dropdown-item" href="#">Mid Level</a></li>
-                        <li><a class="dropdown-item" href="#">Developer Mode</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('popularquiz') }}">Intermediate</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('popularquiz') }}">Mid Level</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('popularquiz') }}">Developer Mode</a></li>
                     </ul>
                 </div>
 
@@ -129,10 +70,11 @@
 
                 </div>
                 <div class="row">
-                    <div class="col"><button type="button" class="btn btn-info text-white px-3 py-1"
-                            style="font-size: 0.875rem;">
-                            Start Quiz
-                        </button></div>
+                    <div class="col">
+                        <a href="{{ url_for('popularquiz') }}" class="btn btn-primary text-white px-4 py-2 rounded-pill">
+                            Explore Quizzes Now &rarr;
+                        </a>
+                    </div>
                 </div>
 
 

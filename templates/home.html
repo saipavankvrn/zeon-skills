@@ -11,8 +11,6 @@
   <meta name="keywords" content="" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-  <!--Favicon-->
-  <link rel="icon" type="image/x-icon" href="" />
   <!--Fontawesome Icons-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
   {% block styles %}{% endblock %}
@@ -37,7 +35,7 @@
     <nav class="navbar navbar-expand-lg">
       <div class="container">
         <!-- Logo -->
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}">
           <img src="{{ url_for('static', filename='images/zeon-skills.png') }}" alt="Zeon Skills logo" class="img-fluid" style="max-height: 40px" />
         </a>
         <!-- Toggler visible only on small & md screens -->
@@ -48,60 +46,165 @@
         <!-- Offcanvas for mobile and tablet -->
         <div class="offcanvas offcanvas-end d-lg-none" tabindex="-1" id="offcanvasNavbar"
           aria-labelledby="offcanvasNavbarLabel">
-          <div class="offcanvas-header">
-            <a class="navbar-brand" href="#">
-              <img src="{{ url_for('static', filename='images/zeon-skills.png') }}" alt="Zeon Skills logo" class="img-fluid" style="max-height: 40px" />
+          <div class="offcanvas-header border-bottom">
+            <a class="navbar-brand" href="{{ url_for('home') }}">
+              <img src="{{ url_for('static', filename='images/zeon-skills.png') }}" alt="Zeon Skills logo" class="img-fluid" style="max-height: 38px" />
             </a>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
-          <div class="offcanvas-body">
+          <div class="offcanvas-body d-flex flex-column">
+            {% if session.get('username') %}
+            <!-- User Status in Offcanvas -->
+            <div class="p-3 bg-light rounded-3 mb-3 border">
+              <div class="d-flex align-items-center mb-2">
+                <img src="{{ url_for('static', filename='images/profile-user.png') }}" alt="Profile" 
+                     class="rounded-circle me-2 border border-2 border-primary" style="width: 38px; height: 38px; object-fit: cover;">
+                <div class="overflow-hidden">
+                  <div class="fw-bold text-dark text-truncate">{{ session.get('username') }}</div>
+                  <small class="text-muted d-block text-truncate">{{ session.get('email') }}</small>
+                </div>
+              </div>
+              <div class="d-flex gap-2">
+                <a href="{{ url_for('profile') }}" class="btn btn-sm btn-outline-primary flex-fill">
+                  <i class="fas fa-user-circle me-1"></i>Profile
+                </a>
+                <a href="{{ url_for('viewresult') }}" class="btn btn-sm btn-outline-secondary flex-fill">
+                  <i class="fas fa-poll me-1"></i>Results
+                </a>
+                {% if session.get('role') == 'admin' %}
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-sm btn-outline-danger flex-fill">
+                  <i class="fas fa-tools me-1"></i>Admin
+                </a>
+                {% endif %}
+              </div>
+            </div>
+            {% endif %}
+
             <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 mb-3">
               <li class="nav-item">
-                <a class="nav-link custom-nav-link active" href="#">About</a>
+                <a class="nav-link custom-nav-link" href="{{ url_for('home') }}">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link custom-nav-link" href="#">How it Works</a>
+                <a class="nav-link custom-nav-link" href="{{ url_for('home') }}#about">About</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link custom-nav-link" href="#">Why Choose Us</a>
+                <a class="nav-link custom-nav-link" href="{{ url_for('home') }}#how-it-works">How It Works</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link custom-nav-link" href="#">Popular Quiz</a>
+                <a class="nav-link custom-nav-link" href="{{ url_for('home') }}#why-choose-us">Why Choose Us</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link custom-nav-link" href="#">Testimonials</a>
+                <a class="nav-link custom-nav-link" href="{{ url_for('popularquiz') }}">Popular Quiz</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link custom-nav-link" href="{{ url_for('home') }}#testimonials">Testimonials</a>
               </li>
             </ul>
-            <a href="{{ url_for('login') }}" class="btn-quiz">Start Quiz Now</a>
+
+            <div class="mt-auto pt-3 border-top">
+              {% if session.get('username') %}
+              <div class="d-grid gap-2">
+                <a href="{{ url_for('popularquiz') }}" class="btn-quiz text-center">Start Quiz Now</a>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-danger rounded-pill py-2">
+                  <i class="fas fa-sign-out-alt me-1"></i>Logout
+                </a>
+              </div>
+              {% else %}
+              <div class="d-grid gap-2">
+                <a href="{{ url_for('login') }}" class="btn btn-primary rounded-pill py-2">Login</a>
+                <a href="{{ url_for('registration') }}" class="btn btn-outline-primary rounded-pill py-2">Register</a>
+              </div>
+              {% endif %}
+            </div>
           </div>
         </div>
+
         <!-- Standard horizontal nav for large devices -->
-        <div class="collapse navbar-collapse d-none d-lg-flex justify-content-end">
-          <ul class="navbar-nav">
+        <div class="collapse navbar-collapse d-none d-lg-flex justify-content-end align-items-center">
+          <ul class="navbar-nav me-3 align-items-center">
             <li class="nav-item">
-              <a class="nav-link custom-nav-link active" href="#">About</a>
+              <a class="nav-link custom-nav-link" href="{{ url_for('home') }}">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link custom-nav-link" href="#">How it Works</a>
+              <a class="nav-link custom-nav-link" href="{{ url_for('home') }}#about">About</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link custom-nav-link" href="#">Why Choose Us</a>
+              <a class="nav-link custom-nav-link" href="{{ url_for('home') }}#how-it-works">How It Works</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link custom-nav-link" href="#">Popular Quiz</a>
+              <a class="nav-link custom-nav-link" href="{{ url_for('home') }}#why-choose-us">Why Choose Us</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link custom-nav-link" href="#">Testimonials</a>
+              <a class="nav-link custom-nav-link" href="{{ url_for('popularquiz') }}">Popular Quiz</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link custom-nav-link" href="{{ url_for('home') }}#testimonials">Testimonials</a>
             </li>
           </ul>
-          <a href="{{ url_for('login') }}" class="btn-quiz">Start Quiz Now</a>
+
+          {% if session.get('username') %}
+          <div class="d-flex align-items-center gap-2">
+            <a href="{{ url_for('popularquiz') }}" class="btn-quiz me-1">Start Quiz Now</a>
+
+            <!-- Profile Dropdown -->
+            <div class="dropdown">
+              <a class="d-flex align-items-center text-decoration-none dropdown-toggle px-2 py-1 rounded" 
+                 href="#" id="userNavDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="color: #2f327d;">
+                <img src="{{ url_for('static', filename='images/profile-user.png') }}" alt="Profile" 
+                     class="rounded-circle border border-2 border-primary me-2" 
+                     style="width: 36px; height: 36px; object-fit: cover;">
+                <span class="fw-semibold text-truncate" style="max-width: 120px;">{{ session.get('username') }}</span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 py-2" aria-labelledby="userNavDropdown" style="min-width: 220px;">
+                <li class="px-3 py-2 border-bottom">
+                  <div class="fw-bold text-dark text-truncate">{{ session.get('username') }}</div>
+                  <small class="text-muted d-block text-truncate">{{ session.get('email') }}</small>
+                  <span class="badge bg-primary-subtle text-primary mt-1 text-capitalize">{{ session.get('role') }}</span>
+                </li>
+                <li>
+                  <a class="dropdown-item py-2" href="{{ url_for('profile') }}">
+                    <i class="fas fa-user-circle me-2 text-primary"></i>Profile
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item py-2" href="{{ url_for('viewresult') }}">
+                    <i class="fas fa-poll me-2 text-success"></i>My Results
+                  </a>
+                </li>
+                {% if session.get('role') == 'admin' %}
+                <li>
+                  <a class="dropdown-item py-2" href="{{ url_for('admin_dashboard') }}">
+                    <i class="fas fa-shield-alt me-2 text-danger"></i>Admin Dashboard
+                  </a>
+                </li>
+                {% endif %}
+                <li><hr class="dropdown-divider my-1"></li>
+                <li>
+                  <a class="dropdown-item py-2 text-danger" href="{{ url_for('logout') }}">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Standalone visible Logout button -->
+            <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1 fw-semibold d-inline-flex align-items-center" title="Logout">
+              <i class="fas fa-sign-out-alt me-1"></i>Logout
+            </a>
+          </div>
+          {% else %}
+          <div class="d-flex align-items-center gap-2">
+            <a href="{{ url_for('login') }}" class="btn btn-primary rounded-pill px-4">Login</a>
+            <a href="{{ url_for('registration') }}" class="btn btn-outline-primary rounded-pill px-4">Register</a>
+          </div>
+          {% endif %}
         </div>
       </div>
     </nav>
   </header>
   {% endif %} {% endblock %} {% block content %}
   <!--BANNER TEXT-->
-  <section class="bg-custom py-5 position-relative py-5">
+  <section id="home" class="bg-custom py-5 position-relative">
     <div class="container py-5">
       <div class="row">
         <div class="col-12 col-sm-12 col-md-12 col-lg-6 d-flex flex-column justify-content-center">
@@ -111,14 +214,14 @@
           </h1>
           <p class="mt-3">
             Test your Knowledge with real-time quizzes designed for students,
-            developers,and job seekers. Practice by topic, get instant
+            developers, and job seekers. Practice by topic, get instant
             results, and build confidence.
           </p>
-          <a href="{{ url_for('login') }}" class="btn-quiz">Start Quiz Now</a>
+          <a href="{{ url_for('popularquiz') }}" class="btn-quiz">Start Quiz Now</a>
         </div>
 
         <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-          <img src="static/images/lp banner.png" alt="Banner image" class="img-fluid" />
+          <img src="{{ url_for('static', filename='images/lp banner.png') }}" alt="Banner image" class="img-fluid" />
         </div>
       </div>
     </div>
@@ -131,15 +234,14 @@
   </section>
 
   <!-- About US -->
-
-  <section class="about-us">
+  <section id="about" class="about-us py-5">
     <div class="container">
       <div class="row">
         <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-          <img src="static/images/lp about.png" alt="women in library" class="img-fluid" />
+          <img src="{{ url_for('static', filename='images/lp about.png') }}" alt="women in library" class="img-fluid" />
         </div>
         <div class="col-12 col-sm-12 col-md-12 col-lg-6 d-flex flex-column justify-content-center">
-          <h4>DRIVEN BY KNOWLEDGE.BUILT FOR GROWTH.</h4>
+          <h4>DRIVEN BY KNOWLEDGE. BUILT FOR GROWTH.</h4>
           <h2 class="mt-2">
             Empowering Learners Through Interactive Assessments
           </h2>
@@ -171,31 +273,90 @@
       </div>
     </div>
   </section>
-  <section id=" services">
-    <div class="container mt-5">
+
+  <!-- How It Works Section -->
+  <section id="how-it-works" class="py-5" style="background-color: #f8fafd;">
+    <div class="container py-4">
+      <div class="text-center mb-5">
+        <small class="text-primary fw-bold text-uppercase" style="letter-spacing: 1px;">Simple &amp; Efficient Process</small>
+        <h2 class="fw-bold mt-2" style="color: #2f327d;">How It Works</h2>
+        <p class="text-muted mx-auto" style="max-width: 600px;">
+          Test your knowledge, improve your technical expertise, and monitor your career readiness in three straightforward steps.
+        </p>
+      </div>
+      <div class="row g-4">
+        <!-- Step 1 -->
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm p-4 text-center rounded-4" style="background: #ffffff;">
+            <div class="d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px; border-radius: 50%; background: #e6f4ff; color: #007bff; font-size: 26px;">
+              <i class="fas fa-laptop-code"></i>
+            </div>
+            <span class="badge bg-primary-subtle text-primary rounded-pill mb-2 align-self-center px-3 py-1 fw-bold">Step 1</span>
+            <h4 class="fw-bold mb-3" style="color: #2f327d;">Select Your Skill</h4>
+            <p class="text-muted mb-0">
+              Browse through our diverse catalog of technical quizzes including Python, Java, SQL, and Web Development tailored for beginners to advanced professionals.
+            </p>
+          </div>
+        </div>
+        <!-- Step 2 -->
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm p-4 text-center rounded-4" style="background: #ffffff;">
+            <div class="d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px; border-radius: 50%; background: #fff4e6; color: #ff922b; font-size: 26px;">
+              <i class="fas fa-stopwatch"></i>
+            </div>
+            <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill mb-2 align-self-center px-3 py-1 fw-bold">Step 2</span>
+            <h4 class="fw-bold mb-3" style="color: #2f327d;">Take The Timed Quiz</h4>
+            <p class="text-muted mb-0">
+              Challenge yourself with carefully structured multiple-choice questions while racing against our live countdown timer to simulate real assessment conditions.
+            </p>
+          </div>
+        </div>
+        <!-- Step 3 -->
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm p-4 text-center rounded-4" style="background: #ffffff;">
+            <div class="d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px; border-radius: 50%; background: #e6fcf5; color: #20c997; font-size: 26px;">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <span class="badge bg-success-subtle text-success rounded-pill mb-2 align-self-center px-3 py-1 fw-bold">Step 3</span>
+            <h4 class="fw-bold mb-3" style="color: #2f327d;">Review &amp; Improve</h4>
+            <p class="text-muted mb-0">
+              Receive instantaneous auto-grading, review detailed answers, identify your strengths and improvement areas, and track your overall mastery over time.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-5">
+        <a href="{{ url_for('popularquiz') }}" class="btn-quiz">Explore Quizzes Now &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Us -->
+  <section id="why-choose-us" class="py-5">
+    <div class="container mt-2">
       <div class="container text-center">
         <div class="row justify-content-center">
-          <h4>DRIVEN BY KNOWLEDGE. BUILD FOR GROWTH.</h4>
+          <small class="text-primary fw-bold text-uppercase" style="letter-spacing: 1px;">DRIVEN BY KNOWLEDGE. BUILT FOR GROWTH.</small>
           <div>
-            <h2 class="mt-2">Test Your Skills.Unlock Your Potential.</h2>
+            <h2 class="mt-2 fw-bold" style="color: #2f327d;">Test Your Skills. Unlock Your Potential.</h2>
           </div>
-          <div class="col-12 mt-3">
-            <p class="mx-auto" s>
-              Our platform helps learnersevaluate their knowledge in various
-              software courses with real-time assessments and insights.
+          <div class="col-12 mt-2">
+            <p class="mx-auto text-muted" style="max-width: 650px;">
+              Our platform helps learners evaluate their knowledge in various
+              software technologies with real-time assessments, analytics, and insights.
             </p>
           </div>
         </div>
       </div>
 
-      <div class="row mt-5 page2-cards">
+      <div class="row mt-4 page2-cards">
         <!-- Card 1 -->
-        <div class="col-sm-4 mt-5 mb-sm-0 position-relative">
+        <div class="col-sm-4 mt-4 mb-sm-0 position-relative">
           <div class="card custom-card h-100 text-center p-4">
             <div class="card-body d-flex flex-column justify-content-center align-items-center">
               <!-- Blue Circle with Image -->
               <div class="circle circle-blue mb-3">
-                <img src="static/images/monitor.png" alt="monitor" />
+                <img src="{{ url_for('static', filename='images/monitor.png') }}" alt="monitor" />
               </div>
 
               <h5 class="card-title mb-3">Course-Based Tests</h5>
@@ -208,12 +369,12 @@
         </div>
 
         <!-- Card 2 -->
-        <div class="col-sm-4 mt-5 mb-5 mb-sm-0 position-relative">
+        <div class="col-sm-4 mt-4 mb-sm-0 position-relative">
           <div class="card custom-card h-100 text-center p-4">
             <div class="card-body d-flex flex-column justify-content-center align-items-center">
               <!-- Yellow Circle with Image -->
               <div class="circle circle-yellow mb-3">
-                <img src="static/images/increase.png" alt="insights" />
+                <img src="{{ url_for('static', filename='images/increase.png') }}" alt="insights" />
               </div>
 
               <h5 class="card-title mb-3">Performance Insights</h5>
@@ -226,12 +387,12 @@
         </div>
 
         <!-- Card 3 -->
-        <div class="col-sm-4 mt-5 mb-5 mb-sm-0 position-relative">
+        <div class="col-sm-4 mt-4 mb-sm-0 position-relative">
           <div class="card custom-card h-100 text-center p-4">
             <div class="card-body d-flex flex-column justify-content-center align-items-center">
               <!-- Dark Green Circle with Image -->
               <div class="circle circle-green mb-3">
-                <img src="static/images/student.png" alt="growth" />
+                <img src="{{ url_for('static', filename='images/student.png') }}" alt="growth" />
               </div>
 
               <h5 class="card-title mb-3">Skill Growth</h5>
@@ -246,11 +407,12 @@
     </div>
   </section>
 
-  <section>
+  <!-- Popular Quiz / Categories -->
+  <section id="popular-quiz" class="py-5">
     <div class="container">
       <!-- Heading -->
       <div class="row">
-        <div class="mt-5">
+        <div class="mt-2">
           <h4>
             <span style="color: #2f327d">Explore Our</span> Quiz Categories
           </h4>
@@ -270,7 +432,7 @@
         <div class="col">
           <div class="card border-0 h-100 p-4" style="background-color: #fff2e6">
             <div class="card-img1">
-              <img src="static/images/java (1).png" alt="Core and Adv.Java" />
+              <img src="{{ url_for('static', filename='images/java (1).png') }}" alt="Core and Adv.Java" />
             </div>
             <div class="card-body">
               <h5 class="card-title">Core and Adv.Java</h5>
@@ -280,7 +442,7 @@
               </p>
             </div>
             <div class="text-end">
-              <a href="{{ url_for('quizview') }}" class="fw-semibold text-decoration-none" style="color: #007bff">
+              <a href="{{ url_for('popularquiz') }}" class="fw-semibold text-decoration-none" style="color: #007bff">
                 Start Quiz <i class="fas fa-long-arrow-alt-right"></i>
               </a>
             </div>
@@ -291,7 +453,7 @@
         <div class="col">
           <div class="card border-0 h-100 p-4">
             <div class="card-img2">
-              <img src="static/images/sql-server (1).png" alt="Python with SQL" />
+              <img src="{{ url_for('static', filename='images/sql-server (1).png') }}" alt="Python with SQL" />
             </div>
             <div class="card-body">
               <h5 class="card-title">Python with SQL</h5>
@@ -301,7 +463,7 @@
               </p>
             </div>
             <div class="text-end">
-              <a href="{{ url_for('quizview') }}" class="fw-semibold text-decoration-none" style="color: #007bff">
+              <a href="{{ url_for('popularquiz') }}" class="fw-semibold text-decoration-none" style="color: #007bff">
                 Start Quiz <i class="fas fa-long-arrow-alt-right"></i>
               </a>
             </div>
@@ -312,7 +474,7 @@
         <div class="col">
           <div class="card border-0 h-100 p-4" style="background-color: #fff2e6">
             <div class="card-img1">
-              <img src="static/images/python.png" alt="Python Programming" />
+              <img src="{{ url_for('static', filename='images/python.png') }}" alt="Python Programming" />
             </div>
             <div class="card-body">
               <h5 class="card-title">Python Programming</h5>
@@ -322,7 +484,7 @@
               </p>
             </div>
             <div class="text-end">
-              <a href="{{ url_for('quizview') }}" class="fw-semibold text-decoration-none" style="color: #007bff">
+              <a href="{{ url_for('popularquiz') }}" class="fw-semibold text-decoration-none" style="color: #007bff">
                 Start Quiz <i class="fas fa-long-arrow-alt-right"></i>
               </a>
             </div>
@@ -333,17 +495,17 @@
         <div class="col">
           <div class="card border-0 h-100 p-4">
             <div class="card-img2">
-              <img src="static/images/java frameworks.jpg" alt="Java Frameworks" />
+              <img src="{{ url_for('static', filename='images/java frameworks.jpg') }}" alt="Java Frameworks" />
             </div>
             <div class="card-body">
               <h5 class="card-title">Java Frameworks</h5>
               <p class="txt">(30 questions)</p>
               <p class="card-text">
-                However a small line of blind text by the name.
+                Explore framework principles and enterprise application logic.
               </p>
             </div>
             <div class="text-end">
-              <a href="{{ url_for('quizview') }}" class="fw-semibold text-decoration-none" style="color: #007bff">
+              <a href="{{ url_for('popularquiz') }}" class="fw-semibold text-decoration-none" style="color: #007bff">
                 Start Quiz <i class="fas fa-long-arrow-alt-right"></i>
               </a>
             </div>
@@ -354,17 +516,17 @@
         <div class="col">
           <div class="card border-0 h-100 p-4" style="background-color: #fff2e6">
             <div class="card-img1">
-              <img src="static/images/java.png" alt="Core Java" />
+              <img src="{{ url_for('static', filename='images/java.png') }}" alt="Core Java" />
             </div>
             <div class="card-body">
               <h5 class="card-title">Core Java</h5>
               <p class="txt">(30 questions)</p>
               <p class="card-text">
-                Questions around full-stack logic, tools, and deployment.
+                Questions around full-stack logic, tools, and object-oriented design.
               </p>
             </div>
             <div class="text-end">
-              <a href="{{ url_for('quizview') }}" class="fw-semibold text-decoration-none" style="color: #007bff">
+              <a href="{{ url_for('popularquiz') }}" class="fw-semibold text-decoration-none" style="color: #007bff">
                 Start Quiz <i class="fas fa-long-arrow-alt-right"></i>
               </a>
             </div>
@@ -375,17 +537,17 @@
         <div class="col">
           <div class="card border-0 h-100 p-4">
             <div class="card-img2">
-              <img src="/static/images/social.png" alt="DOTNET" />
+              <img src="{{ url_for('static', filename='images/social.png') }}" alt="DOTNET" />
             </div>
             <div class="card-body">
               <h5 class="card-title">DOTNET</h5>
               <p class="txt">(30 questions)</p>
               <p class="card-text">
-                Questions around full-stack logic, tools, and deployment.
+                Questions around full-stack logic, C# fundamentals, and deployment.
               </p>
             </div>
             <div class="text-end">
-              <a href="{{ url_for('quizview') }}" class="fw-semibold text-decoration-none" style="color: #007bff">
+              <a href="{{ url_for('popularquiz') }}" class="fw-semibold text-decoration-none" style="color: #007bff">
                 Start Quiz <i class="fas fa-long-arrow-alt-right"></i>
               </a>
             </div>
@@ -397,9 +559,92 @@
     <!-- container end -->
   </section>
 
-  <!-- page-5 -->
-  <!-- Font Awesome 5.15.4 -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <!-- Testimonials Section -->
+  <section id="testimonials" class="py-5" style="background-color: #f8fafd;">
+    <div class="container py-4">
+      <div class="text-center mb-5">
+        <small class="text-primary fw-bold text-uppercase" style="letter-spacing: 1px;">Success Stories</small>
+        <h2 class="fw-bold mt-2" style="color: #2f327d;">What Our Learners Say</h2>
+        <p class="text-muted mx-auto" style="max-width: 600px;">
+          Discover how Zeon Skills helps candidates and developers sharpen their skills and ace technical assessments.
+        </p>
+      </div>
+      <div class="row g-4">
+        <!-- Testimonial 1 -->
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm p-4 rounded-4" style="background-color: #ffffff;">
+            <div class="mb-3 text-warning">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <p class="text-muted fst-italic mb-4">
+              "Zeon Skills was a game changer for my interview prep. The timed tests gave me the actual exam pressure I needed, and the instant results helped me fix my concepts."
+            </p>
+            <div class="d-flex align-items-center mt-auto">
+              <div class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center fw-bold me-3" style="width: 46px; height: 46px;">
+                PS
+              </div>
+              <div>
+                <h6 class="fw-bold mb-0" style="color: #2f327d;">Priya Sharma</h6>
+                <small class="text-muted">Software Developer</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Testimonial 2 -->
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm p-4 rounded-4" style="background-color: #ffffff;">
+            <div class="mb-3 text-warning">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+            <p class="text-muted fst-italic mb-4">
+              "The Python with SQL quiz directly matched what my campus recruiters asked. Having auto-grading and clear solution breakdowns is incredible."
+            </p>
+            <div class="d-flex align-items-center mt-auto">
+              <div class="rounded-circle bg-success-subtle text-success d-flex align-items-center justify-content-center fw-bold me-3" style="width: 46px; height: 46px;">
+                RK
+              </div>
+              <div>
+                <h6 class="fw-bold mb-0" style="color: #2f327d;">Rahul Kumar</h6>
+                <small class="text-muted">Computer Science Student</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Testimonial 3 -->
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm p-4 rounded-4" style="background-color: #ffffff;">
+            <div class="mb-3 text-warning">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <p class="text-muted fst-italic mb-4">
+              "The platform is super smooth, clean, and distraction-free. I can track all my past attempts on my dashboard and watch my scores improve week over week."
+            </p>
+            <div class="d-flex align-items-center mt-auto">
+              <div class="rounded-circle bg-warning-subtle text-warning-emphasis d-flex align-items-center justify-content-center fw-bold me-3" style="width: 46px; height: 46px;">
+                AV
+              </div>
+              <div>
+                <h6 class="fw-bold mb-0" style="color: #2f327d;">Ananya Verma</h6>
+                <small class="text-muted">Backend Engineer</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Contact Section -->
   <section id="contact" class="py-5 bg-light">
@@ -458,8 +703,8 @@
                 </span>
                 <div>
                   <div class="small text-muted">Email Us</div>
-                  <a href="mailto:info@digitit.tech" class="text-decoration-none"
-                    style="color: #007bff">info@digitit.tech</a>
+                  <a href="mailto:support@zeonskills.com" class="text-decoration-none"
+                    style="color: #007bff">support@zeonskills.com</a>
                 </div>
               </li>
             </ul>
@@ -467,31 +712,31 @@
             <div class="mt-3">
               <div class="fw-semibold mb-2">Follow Us</div>
               <div class="d-flex gap-2">
-                <a href="#" class="d-inline-flex align-items-center justify-content-center" style="
+                <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" class="d-inline-flex align-items-center justify-content-center" style="
                       background: #e6f4ff;
                       color: #007bff;
                       width: 38px;
                       height: 38px;
                       border-radius: 50%;
-                    ">
+                    " title="LinkedIn">
                   <i class="fab fa-linkedin-in" style="font-size: 14px"></i>
                 </a>
-                <a href="#" class="d-inline-flex align-items-center justify-content-center" style="
+                <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" class="d-inline-flex align-items-center justify-content-center" style="
                       background: #e6f4ff;
                       color: #007bff;
                       width: 38px;
                       height: 38px;
                       border-radius: 50%;
-                    ">
+                    " title="Instagram">
                   <i class="fab fa-instagram" style="font-size: 14px"></i>
                 </a>
-                <a href="#" class="d-inline-flex align-items-center justify-content-center" style="
+                <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" class="d-inline-flex align-items-center justify-content-center" style="
                       background: #e6f4ff;
                       color: #007bff;
                       width: 38px;
                       height: 38px;
                       border-radius: 50%;
-                    ">
+                    " title="YouTube">
                   <i class="fab fa-youtube" style="font-size: 14px"></i>
                 </a>
               </div>
